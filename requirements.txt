@@ -1,7 +1,7 @@
 flask==3.0.0
-flask-cors==4.0.0
-google-genai==0.2.0
-pydantic==2.9.2
+flask-cors==6.0.1
+google-genai==1.46.0
+pydantic==2.12.3
 markdown==3.5.1
 python-dotenv==1.0.0
 beautifulsoup4==4.12.3
