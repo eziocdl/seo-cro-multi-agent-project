@@ -1,6 +1,6 @@
 # 🔍 AI SEO Audit Team
 
-> **Sistema Multi-Agente para Análise Profissional de SEO, CRO e GEO**
+> **Multi-Agent System for Professional SEO, CRO, and GEO Analysis**
 
 [![Deploy on Render](https://img.shields.io/badge/Deploy-Render-46E3B7?style=flat&logo=render)](https://render.com)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
@@ -8,43 +8,43 @@
 [![Flask](https://img.shields.io/badge/Framework-Flask-000000?style=flat&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Sistema profissional que utiliza **4 agentes especializados** baseados em Google Gemini para realizar análises profundas de websites, fornecendo relatórios estratégicos com scores objetivos e recomendações práticas.
+Professional system that uses **4 specialized agents** powered by Google Gemini to perform in-depth website analysis, providing strategic reports with objective scores and actionable recommendations.
 
 ---
 
 ## 🎯 Features
 
-### ✨ Análise Multi-Dimensional
+### ✨ Multi-Dimensional Analysis
 
-- **🔍 SEO Health** - Auditoria completa de otimização para motores de busca
-  - On-Page SEO (tags, meta dados, headings)
+- **🔍 SEO Health** - Complete search engine optimization audit
+  - On-Page SEO (tags, meta data, headings)
   - Technical SEO (HTTPS, mobile-friendly, performance)
-  - Content Quality (estrutura, palavras-chave, densidade)
-  - Core Web Vitals (velocidade, responsividade)
+  - Content Quality (structure, keywords, density)
+  - Core Web Vitals (speed, responsiveness)
 
-- **📊 CRO Analysis** - Análise de taxa de conversão e usabilidade
-  - Efetividade de CTAs
-  - Otimização de formulários
-  - Confiança e credibilidade
-  - Experiência da página
-  - Mobile readiness
+- **📊 CRO Analysis** - Conversion rate and usability analysis
+  - CTA Effectiveness
+  - Form Optimization
+  - Trust & Credibility
+  - Page Experience
+  - Mobile Readiness
 
-- **🌐 GEO Optimization** - Preparação para AI Search Engines
+- **🌐 GEO Optimization** - AI Search Engines preparation
   - Structured Data (Schema.org)
-  - Compatibilidade com ChatGPT, Bard, Perplexity
-  - Otimização de conteúdo para LLMs
+  - Compatibility with ChatGPT, Bard, Perplexity
+  - Content optimization for LLMs
 
-### 🚀 Tecnologia de Ponta
+### 🚀 Advanced Technology
 
-- **4 Agentes Especializados** trabalhando em pipeline sequencial
-- **Web Scraping Real** com BeautifulSoup (dados verificáveis)
-- **Sistema de Scoring Objetivo** (0-100) baseado em métricas reais
-- **Relatórios em Markdown** profissionais e exportáveis
-- **Interface Web Responsiva** com visualização em tempo real
+- **4 Specialized Agents** working in sequential pipeline
+- **Real Web Scraping** with BeautifulSoup (verifiable data)
+- **Objective Scoring System** (0-100) based on real metrics
+- **Professional Markdown Reports** ready to export
+- **Responsive Web Interface** with real-time visualization
 
 ---
 
-## 🏗️ Arquitetura do Sistema
+## 🏗️ System Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -88,211 +88,211 @@ Sistema profissional que utiliza **4 agentes especializados** baseados em Google
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### 🔄 Pipeline de Agentes
+### 🔄 Agent Pipeline
 
 1. **Agent 1: Page Auditor**
-   - Analisa elementos on-page (title, meta, headings)
-   - Extrai palavras-chave primárias e secundárias
-   - Identifica problemas técnicos de SEO
+   - Analyzes on-page elements (title, meta, headings)
+   - Extracts primary and secondary keywords
+   - Identifies technical SEO issues
 
 2. **Agent 2: SERP Analyst**
-   - Simula análise competitiva da SERP
-   - Identifica oportunidades de conteúdo
-   - Mapeia estratégias dos concorrentes
+   - Simulates competitive SERP analysis
+   - Identifies content opportunities
+   - Maps competitor strategies
 
 3. **Agent 3: CRO Analyst**
-   - Avalia usabilidade e experiência do usuário
-   - Identifica barreiras de conversão
-   - Propõe melhorias de UX/UI
+   - Evaluates usability and user experience
+   - Identifies conversion barriers
+   - Proposes UX/UI improvements
 
 4. **Agent 4: Strategic Advisor**
-   - Consolida análises dos 3 agentes anteriores
-   - Gera relatório estratégico completo em PT-BR
-   - Prioriza recomendações por impacto/esforço
+   - Consolidates analysis from previous 3 agents
+   - Generates complete strategic report in PT-BR
+   - Prioritizes recommendations by impact/effort
 
 ---
 
-## 📊 Sistema de Scoring
+## 📊 Scoring System
 
-### Metodologia de Cálculo
+### Calculation Methodology
 
-Todos os scores são calculados a partir de **dados reais** extraídos do site:
+All scores are calculated from **real data** extracted from the website:
 
 #### 🔍 SEO Score (0-100)
 
-| Componente | Peso | Critérios |
-|------------|------|-----------|
-| **On-Page SEO** | 25 pts | Title tag (50-60 chars), Meta description (150-160 chars), H1 único |
+| Component | Weight | Criteria |
+|-----------|--------|----------|
+| **On-Page SEO** | 25 pts | Title tag (50-60 chars), Meta description (150-160 chars), Unique H1 |
 | **Technical SEO** | 25 pts | HTTPS, Mobile-friendly, Canonical tags |
-| **Content Quality** | 25 pts | Word count (>300), Alt text em imagens, Densidade de keywords |
+| **Content Quality** | 25 pts | Word count (>300), Alt text in images, Keyword density |
 | **Performance** | 25 pts | Load time (<3s), Structured data, Link quality |
 
 #### 📊 CRO Score (0-100)
 
-| Componente | Peso | Critérios |
-|------------|------|-----------|
-| **CTA Effectiveness** | 20 pts | Presença, posicionamento, clareza |
-| **Form Optimization** | 20 pts | Simplicidade, validação, feedback |
-| **Trust & Credibility** | 20 pts | Testimonials, provas sociais, segurança |
-| **Page Experience** | 20 pts | Navegação, hierarquia visual, consistência |
-| **Mobile Readiness** | 20 pts | Responsividade, touch targets, viewport |
+| Component | Weight | Criteria |
+|-----------|--------|----------|
+| **CTA Effectiveness** | 20 pts | Presence, positioning, clarity |
+| **Form Optimization** | 20 pts | Simplicity, validation, feedback |
+| **Trust & Credibility** | 20 pts | Testimonials, social proof, security |
+| **Page Experience** | 20 pts | Navigation, visual hierarchy, consistency |
+| **Mobile Readiness** | 20 pts | Responsiveness, touch targets, viewport |
 
 #### 🌐 GEO Score (0-100)
 
-| Componente | Peso | Critérios |
-|------------|------|-----------|
-| **Structured Data** | 50 pts | Schema.org implementation, tipos relevantes |
-| **AI-Friendly Content** | 30 pts | Formatação clara, FAQs, contexto semântico |
+| Component | Weight | Criteria |
+|-----------|--------|----------|
+| **Structured Data** | 50 pts | Schema.org implementation, relevant types |
+| **AI-Friendly Content** | 30 pts | Clear formatting, FAQs, semantic context |
 | **Metadata Quality** | 20 pts | Open Graph, Twitter Cards, JSON-LD |
 
-### 📈 Classificação dos Scores
+### 📈 Score Classification
 
 ```
-80-100 → Excelente   ✅ Site otimizado
-60-79  → Bom         👍 Melhorias pontuais
-40-59  → Regular     ⚠️  Requer otimização
-0-39   → Crítico     🚨 Ação urgente necessária
+80-100 → Excellent  ✅ Optimized website
+60-79  → Good       👍 Minor improvements needed
+40-59  → Fair       ⚠️  Requires optimization
+0-39   → Critical   🚨 Urgent action required
 ```
 
 ---
 
-## 🛠️ Stack Tecnológico
+## 🛠️ Tech Stack
 
 ### Backend
 
-- **Python 3.11** - Linguagem principal
-- **Flask 3.0** - Framework web minimalista
-- **Gunicorn 21.2** - WSGI server para produção
-- **Google Gemini 1.5 Flash** - LLM para processamento
-- **BeautifulSoup 4.12** - Web scraping com parser nativo
-- **Pydantic 2.9** - Validação de dados estruturados
-- **Python-dotenv 1.0** - Gerenciamento de variáveis de ambiente
+- **Python 3.11** - Main language
+- **Flask 3.0** - Minimalist web framework
+- **Gunicorn 21.2** - WSGI server for production
+- **Google Gemini 1.5 Flash** - LLM for processing
+- **BeautifulSoup 4.12** - Web scraping with native parser
+- **Pydantic 2.9** - Structured data validation
+- **Python-dotenv 1.0** - Environment variable management
 
 ### Frontend
 
-- **HTML5 + CSS3** - Interface responsiva
-- **Vanilla JavaScript** - Lógica do cliente (sem frameworks)
-- **Marked.js** - Renderização de Markdown
-- **Fetch API** - Comunicação assíncrona
+- **HTML5 + CSS3** - Responsive interface
+- **Vanilla JavaScript** - Client-side logic (no frameworks)
+- **Marked.js** - Markdown rendering
+- **Fetch API** - Asynchronous communication
 
 ### DevOps & Deploy
 
-- **Render.com** - Hospedagem em cloud (tier gratuito)
-- **Git/GitHub** - Controle de versão
-- **Gunicorn (gthread worker)** - Otimizado para I/O assíncrono
+- **Render.com** - Cloud hosting (free tier)
+- **Git/GitHub** - Version control
+- **Gunicorn (gthread worker)** - Optimized for async I/O
 
 ---
 
-## 📁 Estrutura do Projeto
+## 📁 Project Structure
 
 ```
 ai_seo_audit_team/
 ├── 🔧 Core Application
 │   ├── app.py                      # Flask API (main)
-│   ├── agent.py                    # Pipeline de 4 agentes
-│   ├── web_scraper.py              # Scraping real de sites
-│   ├── scoring_system.py           # Cálculo de scores 0-100
+│   ├── agent.py                    # 4-agent pipeline
+│   ├── web_scraper.py              # Real website scraping
+│   ├── scoring_system.py           # 0-100 score calculation
 │   └── __init__.py                 # Package initialization
 │
 ├── 🎨 Frontend
 │   └── public/
-│       ├── index.html              # Interface principal
-│       ├── script.js               # Lógica do cliente
-│       └── style.css               # Estilos responsivos
+│       ├── index.html              # Main interface
+│       ├── script.js               # Client logic
+│       └── style.css               # Responsive styles
 │
 ├── ⚙️ Configuration
-│   ├── requirements.txt            # Dependências Python
-│   ├── runtime.txt                 # Versão Python (3.11.0)
-│   ├── Procfile                    # Configuração Render/Heroku
-│   ├── render.yaml                 # Blueprint Render
-│   └── .env.example                # Template de variáveis
+│   ├── requirements.txt            # Python dependencies
+│   ├── runtime.txt                 # Python version (3.11.0)
+│   ├── Procfile                    # Render/Heroku config
+│   ├── render.yaml                 # Render blueprint
+│   └── .env.example                # Environment variables template
 │
 ├── 🚀 Deploy Scripts
-│   ├── render-build.sh             # Script de build
-│   └── start-server.sh             # Script de inicialização
+│   ├── render-build.sh             # Build script
+│   └── start-server.sh             # Startup script
 │
 └── 📚 Documentation
-    └── README.md                   # Este arquivo
+    └── README.md                   # This file
 ```
 
-**Total:** ~1.900 linhas de código Python | ~28KB frontend
+**Total:** ~1,900 lines of Python code | ~28KB frontend
 
 ---
 
-## 🚀 Instalação e Uso
+## 🚀 Installation and Usage
 
-### 📋 Pré-requisitos
+### 📋 Prerequisites
 
-- Python 3.11 ou superior
-- Conta Google AI Studio (para API Key)
+- Python 3.11 or higher
+- Google AI Studio account (for API Key)
 - Git
 
-### 🔧 Instalação Local
+### 🔧 Local Installation
 
-#### 1. Clone o repositório
+#### 1. Clone the repository
 
 ```bash
 git clone https://github.com/eziocdl/seo-cro-multi-agent-project.git
 cd ai_seo_audit_team
 ```
 
-#### 2. Crie ambiente virtual
+#### 2. Create virtual environment
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate  # Linux/Mac
-# ou
+# or
 venv\Scripts\activate     # Windows
 ```
 
-#### 3. Instale dependências
+#### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-#### 4. Configure variáveis de ambiente
+#### 4. Configure environment variables
 
 ```bash
 cp .env.example .env
 ```
 
-Edite `.env` e adicione sua Google API Key:
+Edit `.env` and add your Google API Key:
 
 ```env
-GOOGLE_API_KEY=AIzaSy...sua_chave_aqui
+GOOGLE_API_KEY=AIzaSy...your_key_here
 ```
 
-**Obter API Key:** https://aistudio.google.com/app/apikey
+**Get API Key:** https://aistudio.google.com/app/apikey
 
-#### 5. Inicie o servidor
+#### 5. Start the server
 
 ```bash
 python app.py
 ```
 
-#### 6. Acesse a aplicação
+#### 6. Access the application
 
-Abra no navegador:
+Open in browser:
 ```
 http://localhost:8000
 ```
 
 ---
 
-## 🌐 Deploy em Produção
+## 🌐 Production Deploy
 
-### Deploy no Render.com (Gratuito)
+### Deploy on Render.com (Free)
 
-**Tempo estimado:** 5 minutos
+**Estimated time:** 5 minutes
 
-1. **Fork/Clone** este repositório no GitHub
+1. **Fork/Clone** this repository on GitHub
 
-2. Acesse **[Render.com](https://render.com)** e faça login
+2. Access **[Render.com](https://render.com)** and login
 
-3. Clique em **"New +"** → **"Web Service"**
+3. Click **"New +"** → **"Web Service"**
 
-4. Conecte seu repositório GitHub
+4. Connect your GitHub repository
 
 5. **Configure:**
 
@@ -311,43 +311,43 @@ gunicorn app:app --bind 0.0.0.0:$PORT --timeout 180 --workers 1 --threads 2 --wo
 Instance Type: Free
 ```
 
-6. **Adicione Environment Variable:**
+6. **Add Environment Variable:**
 
 ```
 Key: GOOGLE_API_KEY
-Value: sua_chave_aqui
+Value: your_key_here
 ```
 
-7. Clique em **"Create Web Service"**
+7. Click **"Create Web Service"**
 
-8. Aguarde ~3 minutos
+8. Wait ~3 minutes
 
-9. ✅ **Pronto!** Sua URL estará disponível
+9. ✅ **Done!** Your URL will be available
 
 ---
 
-## 🎮 Como Usar
+## 🎮 How to Use
 
-### Interface Web
+### Web Interface
 
-1. **Acesse a aplicação** (local ou deploy)
-2. **Digite a URL** do site que deseja analisar
-3. **Clique em "Analisar Site"**
-4. **Aguarde 1-2 minutos** (processamento dos 4 agentes)
-5. **Visualize o relatório completo** com:
-   - Scores SEO, CRO, GEO (0-100)
-   - Análise detalhada de cada componente
-   - Recomendações estratégicas priorizadas
-   - Roadmap de implementação (30 dias)
+1. **Access the application** (local or deployed)
+2. **Enter the URL** of the website you want to analyze
+3. **Click "Analyze Website"**
+4. **Wait 1-2 minutes** (4-agent pipeline processing)
+5. **View the complete report** with:
+   - SEO, CRO, GEO scores (0-100)
+   - Detailed analysis of each component
+   - Prioritized strategic recommendations
+   - 30-day implementation roadmap
 
-### API REST
+### REST API
 
 #### Endpoint: Health Check
 
 ```bash
 GET /health
 
-# Resposta
+# Response
 {
   "status": "healthy",
   "service": "AI SEO Audit Team API",
@@ -355,170 +355,170 @@ GET /health
 }
 ```
 
-#### Endpoint: Análise de Site
+#### Endpoint: Website Analysis
 
 ```bash
 POST /invoke
 Content-Type: application/json
 
 {
-  "message": "https://exemplo.com"
+  "message": "https://example.com"
 }
 
-# Resposta
+# Response
 {
-  "output": "# Relatório de Auditoria Digital Estratégica\n\n..."
+  "output": "# Strategic Digital Audit Report\n\n..."
 }
 ```
 
 ---
 
-## 📊 Exemplo de Relatório
+## 📊 Report Example
 
-O sistema gera relatórios em Markdown com estrutura profissional:
+The system generates Markdown reports with professional structure:
 
 ```markdown
-# Relatório de Auditoria Digital Estratégica
+# Strategic Digital Audit Report
 
-> Análise realizada em: 20/11/2025 às 13:46:26
+> Analysis performed on: 11/20/2025 at 01:46:26 PM
 
-**URL Analisada:** https://exemplo.com
+**Analyzed URL:** https://example.com
 
 ---
 
-## Índice de Performance Digital
+## Digital Performance Index
 
 ╔══════════════════════════════════════════════════════╗
-║  SCORE GERAL: 78/100 - Bom                          ║
+║  OVERALL SCORE: 78/100 - Good                       ║
 ╠══════════════════════════════════════════════════════╣
 ║  SEO Health:        85/100  ████████▌░              ║
 ║  CRO Readiness:     72/100  ███████▏░░             ║
 ║  GEO Optimization:  65/100  ██████▌░░░             ║
 ╚══════════════════════════════════════════════════════╝
 
-## Sumário Executivo
+## Executive Summary
 [...]
 
-## 1. Auditoria SEO
+## 1. SEO Audit
 [...]
 
-## 2. Análise Competitiva - SERP Intelligence
+## 2. Competitive Analysis - SERP Intelligence
 [...]
 
-## 3. Auditoria CRO
+## 3. CRO Audit
 [...]
 
-## 4. Otimização GEO
+## 4. GEO Optimization
 [...]
 
-## Recomendações Estratégicas Priorizadas
+## Prioritized Strategic Recommendations
 [...]
 
-## Roadmap de Implementação (30 Dias)
+## Implementation Roadmap (30 Days)
 [...]
 ```
 
 ---
 
-## ⚙️ Configuração Avançada
+## ⚙️ Advanced Configuration
 
-### Variáveis de Ambiente
+### Environment Variables
 
 ```env
-# Obrigatório
+# Required
 GOOGLE_API_KEY=AIzaSy...     # Google AI Studio API Key
 
-# Opcional
+# Optional
 FLASK_ENV=production          # production | development
-PORT=8000                     # Porta do servidor (default: 8000)
+PORT=8000                     # Server port (default: 8000)
 ```
 
-### Customização de Agentes
+### Agent Customization
 
-Edite `app.py` para ajustar:
-- Instruções dos agentes
-- Modelo do Gemini (gemini-1.5-flash, gemini-pro, etc)
-- Prompts e formatação de saída
+Edit `app.py` to adjust:
+- Agent instructions
+- Gemini model (gemini-1.5-flash, gemini-pro, etc)
+- Prompts and output formatting
 
-### Customização de Scoring
+### Scoring Customization
 
-Edite `scoring_system.py` para ajustar:
-- Pesos de cada componente (constantes no topo)
-- Critérios de pontuação
-- Limites de classificação
+Edit `scoring_system.py` to adjust:
+- Component weights (constants at top)
+- Scoring criteria
+- Classification thresholds
 
 ---
 
 ## 🐛 Troubleshooting
 
-### Problema: "GOOGLE_API_KEY não encontrada"
+### Problem: "GOOGLE_API_KEY not found"
 
-**Solução:**
+**Solution:**
 ```bash
-# Verifique se o .env existe
+# Check if .env exists
 cat .env
 
-# Configure a variável
-echo "GOOGLE_API_KEY=sua_chave" >> .env
+# Configure the variable
+echo "GOOGLE_API_KEY=your_key" >> .env
 ```
 
-### Problema: "Bad Gateway" no Render
+### Problem: "Bad Gateway" on Render
 
-**Solução:**
+**Solution:**
 ```bash
-# No Render Dashboard → Settings → Start Command
-# Cole exatamente:
+# In Render Dashboard → Settings → Start Command
+# Paste exactly:
 gunicorn app:app --bind 0.0.0.0:$PORT --timeout 180 --workers 1 --threads 2 --worker-class gthread
 ```
 
-### Problema: "429 Quota Exceeded"
+### Problem: "429 Quota Exceeded"
 
-**Causa:** Limite de requisições gratuitas do Gemini (15 req/min)
+**Cause:** Free tier request limit from Gemini (15 req/min)
 
-**Solução:** Aguarde 1 minuto ou faça upgrade da API key
+**Solution:** Wait 1 minute or upgrade API key
 
 ---
 
 ## 🗺️ Roadmap
 
-### ✅ Versão 1.0 (Atual)
+### ✅ Version 1.0 (Current)
 
-- [x] Pipeline de 4 agentes especializados
-- [x] Web scraping real com BeautifulSoup
-- [x] Sistema de scoring objetivo (0-100)
-- [x] Relatórios em Markdown
-- [x] Interface web responsiva
-- [x] Deploy gratuito no Render
+- [x] 4-agent specialized pipeline
+- [x] Real web scraping with BeautifulSoup
+- [x] Objective scoring system (0-100)
+- [x] Markdown reports
+- [x] Responsive web interface
+- [x] Free deploy on Render
 
-### 🚧 Versão 1.1 (Próxima)
+### 🚧 Version 1.1 (Next)
 
-- [ ] Geração de PDF profissional
-- [ ] Integração com Google Search Console
-- [ ] Análise de backlinks
-- [ ] Comparação histórica de scores
-- [ ] Cache de relatórios
+- [ ] Professional PDF generation
+- [ ] Google Search Console integration
+- [ ] Backlink analysis
+- [ ] Historical score comparison
+- [ ] Report caching
 
-### 🔮 Versão 2.0 (Futuro)
+### 🔮 Version 2.0 (Future)
 
-- [ ] Dashboard multi-site
-- [ ] Autenticação de usuários
-- [ ] API pública com rate limiting
-- [ ] Exportação para Word/Excel
-- [ ] Integração com ferramentas SEO (Ahrefs, SEMrush)
+- [ ] Multi-site dashboard
+- [ ] User authentication
+- [ ] Public API with rate limiting
+- [ ] Word/Excel export
+- [ ] SEO tools integration (Ahrefs, SEMrush)
 
 ---
 
-## 🤝 Contribuindo
+## 🤝 Contributing
 
-Contribuições são bem-vindas! Siga os passos:
+Contributions are welcome! Follow these steps:
 
-1. Fork o projeto
-2. Crie uma branch: `git checkout -b feature/nova-funcionalidade`
-3. Commit: `git commit -m 'feat: adiciona funcionalidade X'`
-4. Push: `git push origin feature/nova-funcionalidade`
-5. Abra um Pull Request
+1. Fork the project
+2. Create a branch: `git checkout -b feature/new-feature`
+3. Commit: `git commit -m 'feat: add feature X'`
+4. Push: `git push origin feature/new-feature`
+5. Open a Pull Request
 
-### Padrões de Código
+### Code Standards
 
 - **Python:** PEP 8
 - **Commits:** Conventional Commits
@@ -526,9 +526,9 @@ Contribuições são bem-vindas! Siga os passos:
 
 ---
 
-## 📄 Licença
+## 📄 License
 
-Este projeto está licenciado sob a **MIT License**.
+This project is licensed under the **MIT License**.
 
 ```
 MIT License
@@ -542,7 +542,7 @@ in the Software without restriction...
 
 ---
 
-## 👤 Autor
+## 👤 Author
 
 **Ezio Lima**
 
@@ -552,25 +552,25 @@ in the Software without restriction...
 
 ---
 
-## 🙏 Agradecimentos
+## 🙏 Acknowledgments
 
-- Google AI pela disponibilização da API Gemini
-- Render.com pela hospedagem gratuita
-- Comunidade Flask e BeautifulSoup
-- Todos que contribuírem com o projeto
+- Google AI for providing the Gemini API
+- Render.com for free hosting
+- Flask and BeautifulSoup communities
+- All contributors to this project
 
 ---
 
-## 📞 Suporte
+## 📞 Support
 
-### Recursos
+### Resources
 
 - 🐛 [Report Issues](https://github.com/eziocdl/seo-cro-multi-agent-project/issues)
 - 💬 [Discussions](https://github.com/eziocdl/seo-cro-multi-agent-project/discussions)
 
-### Links Úteis
+### Useful Links
 
-- 🔗 **Demo Live:** https://seo-cro-multi-agent-project.onrender.com
+- 🔗 **Live Demo:** https://seo-cro-multi-agent-project.onrender.com
 - 📚 **Google AI Studio:** https://aistudio.google.com
 - 🎨 **Render Dashboard:** https://dashboard.render.com
 
@@ -578,10 +578,10 @@ in the Software without restriction...
 
 <div align="center">
 
-**⭐ Se este projeto foi útil, considere dar uma estrela no GitHub! ⭐**
+**⭐ If this project was helpful, consider giving it a star on GitHub! ⭐**
 
-Desenvolvido com dedicação por [Ezio Lima](https://github.com/eziocdl)
+Developed with dedication by [Ezio Lima](https://github.com/eziocdl)
 
-[⬆ Voltar ao topo](#-ai-seo-audit-team)
+[⬆ Back to top](#-ai-seo-audit-team)
 
 </div>
