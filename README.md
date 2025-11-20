@@ -1,6 +1,6 @@
-# 🤖 AI SEO Audit Team
+# 🔍 AI SEO Audit Team
 
-> **Sistema Multi-Agente de IA para Análise Profissional de SEO, CRO e GEO**
+> **Sistema Multi-Agente para Análise Profissional de SEO, CRO e GEO**
 
 [![Deploy on Render](https://img.shields.io/badge/Deploy-Render-46E3B7?style=flat&logo=render)](https://render.com)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
@@ -8,7 +8,7 @@
 [![Flask](https://img.shields.io/badge/Framework-Flask-000000?style=flat&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Sistema inteligente que utiliza **4 agentes de IA especializados** (Google Gemini 2.5) para realizar análises profundas de websites, fornecendo relatórios estratégicos com scores objetivos e recomendações práticas.
+Sistema profissional que utiliza **4 agentes especializados** baseados em Google Gemini para realizar análises profundas de websites, fornecendo relatórios estratégicos com scores objetivos e recomendações práticas.
 
 ---
 
@@ -29,14 +29,14 @@ Sistema inteligente que utiliza **4 agentes de IA especializados** (Google Gemin
   - Experiência da página
   - Mobile readiness
 
-- **🌐 GEO Optimization** - Preparação para IA Search Engines
+- **🌐 GEO Optimization** - Preparação para AI Search Engines
   - Structured Data (Schema.org)
   - Compatibilidade com ChatGPT, Bard, Perplexity
   - Otimização de conteúdo para LLMs
 
 ### 🚀 Tecnologia de Ponta
 
-- **4 Agentes IA Especializados** trabalhando em pipeline sequencial
+- **4 Agentes Especializados** trabalhando em pipeline sequencial
 - **Web Scraping Real** com BeautifulSoup (dados verificáveis)
 - **Sistema de Scoring Objetivo** (0-100) baseado em métricas reais
 - **Relatórios em Markdown** profissionais e exportáveis
@@ -67,8 +67,8 @@ Sistema inteligente que utiliza **4 agentes de IA especializados** (Google Gemin
 │         └───────────┬───────────┘                               │
 │                     ▼                                           │
 │         ┌───────────────────────┐                               │
-│         │   4 AI AGENTS PIPELINE │                              │
-│         │  (Google Gemini 2.5)  │                               │
+│         │   4 AGENTS PIPELINE   │                               │
+│         │  (Google Gemini API)  │                               │
 │         └───────────┬───────────┘                               │
 │                     │                                           │
 │    ┌────────────────┼────────────────┬────────────────┐        │
@@ -88,7 +88,7 @@ Sistema inteligente que utiliza **4 agentes de IA especializados** (Google Gemin
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### 🔄 Pipeline de Agentes IA
+### 🔄 Pipeline de Agentes
 
 1. **Agent 1: Page Auditor**
    - Analisa elementos on-page (title, meta, headings)
@@ -161,11 +161,11 @@ Todos os scores são calculados a partir de **dados reais** extraídos do site:
 ### Backend
 
 - **Python 3.11** - Linguagem principal
-- **Flask 3.0** - Framework web
-- **Gunicorn 21.2** - WSGI server (produção)
-- **Google Gemini 2.5 Flash** - LLM para agentes IA
-- **BeautifulSoup 4.12** - Web scraping (parser HTML nativo)
-- **Pydantic 2.9** - Validação de schemas estruturados
+- **Flask 3.0** - Framework web minimalista
+- **Gunicorn 21.2** - WSGI server para produção
+- **Google Gemini 1.5 Flash** - LLM para processamento
+- **BeautifulSoup 4.12** - Web scraping com parser nativo
+- **Pydantic 2.9** - Validação de dados estruturados
 - **Python-dotenv 1.0** - Gerenciamento de variáveis de ambiente
 
 ### Frontend
@@ -173,11 +173,11 @@ Todos os scores são calculados a partir de **dados reais** extraídos do site:
 - **HTML5 + CSS3** - Interface responsiva
 - **Vanilla JavaScript** - Lógica do cliente (sem frameworks)
 - **Marked.js** - Renderização de Markdown
-- **Fetch API** - Comunicação com backend
+- **Fetch API** - Comunicação assíncrona
 
 ### DevOps & Deploy
 
-- **Render.com** - Hospedagem (tier gratuito)
+- **Render.com** - Hospedagem em cloud (tier gratuito)
 - **Git/GitHub** - Controle de versão
 - **Gunicorn (gthread worker)** - Otimizado para I/O assíncrono
 
@@ -189,10 +189,9 @@ Todos os scores são calculados a partir de **dados reais** extraídos do site:
 ai_seo_audit_team/
 ├── 🔧 Core Application
 │   ├── app.py                      # Flask API (main)
-│   ├── agent.py                    # Pipeline de 4 agentes IA
+│   ├── agent.py                    # Pipeline de 4 agentes
 │   ├── web_scraper.py              # Scraping real de sites
 │   ├── scoring_system.py           # Cálculo de scores 0-100
-│   ├── schemas.py                  # Pydantic schemas
 │   └── __init__.py                 # Package initialization
 │
 ├── 🎨 Frontend
@@ -206,28 +205,17 @@ ai_seo_audit_team/
 │   ├── runtime.txt                 # Versão Python (3.11.0)
 │   ├── Procfile                    # Configuração Render/Heroku
 │   ├── render.yaml                 # Blueprint Render
-│   ├── .env.example                # Template de variáveis
-│   └── .gitignore                  # Arquivos ignorados
+│   └── .env.example                # Template de variáveis
 │
 ├── 🚀 Deploy Scripts
 │   ├── render-build.sh             # Script de build
-│   ├── start-server.sh             # Script de inicialização
-│   └── start.sh                    # Dev environment setup
-│
-├── 🧪 Testing
-│   ├── test_app_startup.py         # Testes de inicialização
-│   └── test_agent.py               # Testes dos agentes
+│   └── start-server.sh             # Script de inicialização
 │
 └── 📚 Documentation
-    ├── README.md                   # Este arquivo
-    ├── DOCUMENTATION.md            # Documentação técnica
-    ├── DEPLOY.md                   # Guia de deploy
-    ├── DEPLOY_RENDER.md            # Deploy no Render (passo-a-passo)
-    ├── GUIA_PRODUCAO.md            # Preparação para produção
-    └── TESTE_RENDER.md             # Testes pós-deploy
+    └── README.md                   # Este arquivo
 ```
 
-**Total:** ~1.890 linhas de código Python | ~28KB de assets frontend
+**Total:** ~1.900 linhas de código Python | ~28KB frontend
 
 ---
 
@@ -280,10 +268,6 @@ GOOGLE_API_KEY=AIzaSy...sua_chave_aqui
 #### 5. Inicie o servidor
 
 ```bash
-# Opção 1: Script automático (recomendado)
-./start.sh
-
-# Opção 2: Manual
 python app.py
 ```
 
@@ -301,8 +285,6 @@ http://localhost:8000
 ### Deploy no Render.com (Gratuito)
 
 **Tempo estimado:** 5 minutos
-
-#### Método Rápido
 
 1. **Fork/Clone** este repositório no GitHub
 
@@ -340,17 +322,7 @@ Value: sua_chave_aqui
 
 8. Aguarde ~3 minutos
 
-9. ✅ **Pronto!** Sua URL:
-```
-https://ai-seo-audit-team.onrender.com
-```
-
-### Documentação Completa
-
-Para guias detalhados de deploy:
-- **[DEPLOY.md](./DEPLOY.md)** - Todas as plataformas (Render, Railway, Fly.io)
-- **[DEPLOY_RENDER.md](./DEPLOY_RENDER.md)** - Render.com passo-a-passo
-- **[GUIA_PRODUCAO.md](./GUIA_PRODUCAO.md)** - Preparação para produção
+9. ✅ **Pronto!** Sua URL estará disponível
 
 ---
 
@@ -361,7 +333,7 @@ Para guias detalhados de deploy:
 1. **Acesse a aplicação** (local ou deploy)
 2. **Digite a URL** do site que deseja analisar
 3. **Clique em "Analisar Site"**
-4. **Aguarde 1-2 minutos** (pipeline de 4 agentes IA processando)
+4. **Aguarde 1-2 minutos** (processamento dos 4 agentes)
 5. **Visualize o relatório completo** com:
    - Scores SEO, CRO, GEO (0-100)
    - Análise detalhada de cada componente
@@ -403,7 +375,7 @@ Content-Type: application/json
 
 ## 📊 Exemplo de Relatório
 
-O sistema gera relatórios em Markdown com esta estrutura:
+O sistema gera relatórios em Markdown com estrutura profissional:
 
 ```markdown
 # Relatório de Auditoria Digital Estratégica
@@ -425,77 +397,25 @@ O sistema gera relatórios em Markdown com esta estrutura:
 ╚══════════════════════════════════════════════════════╝
 
 ## Sumário Executivo
-
-[Análise consolidada dos 3 pilares]
+[...]
 
 ## 1. Auditoria SEO
-
-### On-Page Elements
-- Title Tag: "Exemplo - Título do Site" (21 caracteres)
-- Meta Description: ...
-
-### Technical SEO
-- HTTPS: ✅ Implementado
-- Mobile-Friendly: ✅ Configurado
-- Load Time: 2.3s (Bom)
+[...]
 
 ## 2. Análise Competitiva - SERP Intelligence
-
-[Insights sobre concorrentes e oportunidades]
+[...]
 
 ## 3. Auditoria CRO
-
-[Análise de conversão e usabilidade]
+[...]
 
 ## 4. Otimização GEO
-
-[Preparação para IA Search Engines]
+[...]
 
 ## Recomendações Estratégicas Priorizadas
-
-### Prioridade Alta
-1. [Recomendação com impacto/esforço]
-2. [...]
-
-### Prioridade Média
 [...]
 
 ## Roadmap de Implementação (30 Dias)
-
-**Semana 1:**
-- [ ] Implementar HTTPS
-- [ ] Otimizar meta tags
-
 [...]
-```
-
----
-
-## 🧪 Testes
-
-### Testes Automatizados
-
-```bash
-# Teste de inicialização
-python test_app_startup.py
-
-# Teste dos agentes (se configurado)
-python test_agent.py
-```
-
-### Teste Manual (Local)
-
-```bash
-# 1. Iniciar servidor
-python app.py
-
-# 2. Teste de health check
-curl http://localhost:8000/health
-
-# 3. Teste de análise
-curl -X POST http://localhost:8000/invoke \
-  -H "Content-Type: application/json" \
-  -d '{"message":"https://google.com"}'
 ```
 
 ---
@@ -515,15 +435,15 @@ PORT=8000                     # Porta do servidor (default: 8000)
 
 ### Customização de Agentes
 
-Edite `agent.py` para ajustar:
+Edite `app.py` para ajustar:
 - Instruções dos agentes
-- Modelo do Gemini (gemini-2.5-flash, gemini-pro, etc)
-- Schemas de saída (Pydantic)
+- Modelo do Gemini (gemini-1.5-flash, gemini-pro, etc)
+- Prompts e formatação de saída
 
 ### Customização de Scoring
 
 Edite `scoring_system.py` para ajustar:
-- Pesos de cada componente
+- Pesos de cada componente (constantes no topo)
 - Critérios de pontuação
 - Limites de classificação
 
@@ -557,19 +477,13 @@ gunicorn app:app --bind 0.0.0.0:$PORT --timeout 180 --workers 1 --threads 2 --wo
 
 **Solução:** Aguarde 1 minuto ou faça upgrade da API key
 
-### Mais problemas?
-
-Consulte:
-- [DEPLOY.md](./DEPLOY.md) - Troubleshooting de deploy
-- [Issues do GitHub](https://github.com/eziocdl/seo-cro-multi-agent-project/issues)
-
 ---
 
 ## 🗺️ Roadmap
 
 ### ✅ Versão 1.0 (Atual)
 
-- [x] Pipeline de 4 agentes IA
+- [x] Pipeline de 4 agentes especializados
 - [x] Web scraping real com BeautifulSoup
 - [x] Sistema de scoring objetivo (0-100)
 - [x] Relatórios em Markdown
@@ -591,35 +505,18 @@ Consulte:
 - [ ] API pública com rate limiting
 - [ ] Exportação para Word/Excel
 - [ ] Integração com ferramentas SEO (Ahrefs, SEMrush)
-- [ ] Análise de Core Web Vitals real (não simulado)
 
 ---
 
 ## 🤝 Contribuindo
 
-Contribuições são bem-vindas! Veja como contribuir:
+Contribuições são bem-vindas! Siga os passos:
 
-### 1. Fork o projeto
-
-### 2. Crie uma branch para sua feature
-
-```bash
-git checkout -b feature/nova-funcionalidade
-```
-
-### 3. Commit suas mudanças
-
-```bash
-git commit -m 'feat: adiciona nova funcionalidade X'
-```
-
-### 4. Push para a branch
-
-```bash
-git push origin feature/nova-funcionalidade
-```
-
-### 5. Abra um Pull Request
+1. Fork o projeto
+2. Crie uma branch: `git checkout -b feature/nova-funcionalidade`
+3. Commit: `git commit -m 'feat: adiciona funcionalidade X'`
+4. Push: `git push origin feature/nova-funcionalidade`
+5. Abra um Pull Request
 
 ### Padrões de Código
 
@@ -631,7 +528,7 @@ git push origin feature/nova-funcionalidade
 
 ## 📄 Licença
 
-Este projeto está licenciado sob a **MIT License** - veja o arquivo [LICENSE](LICENSE) para detalhes.
+Este projeto está licenciado sob a **MIT License**.
 
 ```
 MIT License
@@ -651,36 +548,29 @@ in the Software without restriction...
 
 - GitHub: [@eziocdl](https://github.com/eziocdl)
 - LinkedIn: [Ezio Lima](https://www.linkedin.com/in/ezio-lima)
-- Email: contato@eziolima.com
+- Portfolio: https://eziolima.dev
 
 ---
 
 ## 🙏 Agradecimentos
 
-- **Google AI** - Gemini 2.5 Flash API
-- **Render.com** - Hospedagem gratuita
-- **Flask Community** - Framework web
-- **BeautifulSoup** - Web scraping
-- **Comunidade Open Source** - Inspiração e ferramentas
+- Google AI pela disponibilização da API Gemini
+- Render.com pela hospedagem gratuita
+- Comunidade Flask e BeautifulSoup
+- Todos que contribuírem com o projeto
 
 ---
 
 ## 📞 Suporte
 
-### Documentação
+### Recursos
 
-- 📖 [Documentação Técnica](./DOCUMENTATION.md)
-- 🚀 [Guia de Deploy](./DEPLOY.md)
-- 🔧 [Guia de Produção](./GUIA_PRODUCAO.md)
-
-### Comunidade
-
-- 💬 [GitHub Discussions](https://github.com/eziocdl/seo-cro-multi-agent-project/discussions)
 - 🐛 [Report Issues](https://github.com/eziocdl/seo-cro-multi-agent-project/issues)
+- 💬 [Discussions](https://github.com/eziocdl/seo-cro-multi-agent-project/discussions)
 
 ### Links Úteis
 
-- 🔗 **Demo Live:** https://ai-seo-audit-team.onrender.com
+- 🔗 **Demo Live:** https://seo-cro-multi-agent-project.onrender.com
 - 📚 **Google AI Studio:** https://aistudio.google.com
 - 🎨 **Render Dashboard:** https://dashboard.render.com
 
@@ -690,7 +580,7 @@ in the Software without restriction...
 
 **⭐ Se este projeto foi útil, considere dar uma estrela no GitHub! ⭐**
 
-Feito com ❤️ e ☕ usando **Google Gemini 2.5 Flash**
+Desenvolvido com dedicação por [Ezio Lima](https://github.com/eziocdl)
 
 [⬆ Voltar ao topo](#-ai-seo-audit-team)
 

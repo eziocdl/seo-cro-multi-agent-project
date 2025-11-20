@@ -1,33 +1,42 @@
 """
-Módulo de scraping web para coleta de dados REAIS dos sites
-Usa apenas ferramentas gratuitas: BeautifulSoup, Requests, Google PageSpeed Insights API
+Web scraping module for real data extraction from websites.
+Uses BeautifulSoup and Requests for comprehensive SEO analysis.
 """
 
 import requests
 from bs4 import BeautifulSoup
 import time
 import re
+import json
 from urllib.parse import urlparse, urljoin
 from typing import Dict, List, Optional
-import json
+
+DEFAULT_TIMEOUT = 10
+DEFAULT_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+
 
 class WebScraper:
-    """Scraper profissional para análise SEO"""
+    """Professional web scraper for comprehensive SEO analysis."""
 
-    def __init__(self, url: str, timeout: int = 10):
+    def __init__(self, url: str, timeout: int = DEFAULT_TIMEOUT):
         self.url = url
         self.timeout = timeout
         self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'User-Agent': DEFAULT_USER_AGENT,
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
         }
-        self.soup = None
-        self.response = None
-        self.load_time = 0
+        self.soup: Optional[BeautifulSoup] = None
+        self.response: Optional[requests.Response] = None
+        self.load_time: float = 0
 
     def fetch_page(self) -> bool:
-        """Faz o download da página e mede tempo de resposta"""
+        """
+        Download page and measure response time.
+
+        Returns:
+            True if successful, False otherwise
+        """
         try:
             print(f"[SCRAPER] Baixando página: {self.url}")
             start_time = time.time()
@@ -42,7 +51,6 @@ class WebScraper:
             self.load_time = time.time() - start_time
             self.response.raise_for_status()
 
-            # Parse HTML (usando html.parser nativo do Python)
             self.soup = BeautifulSoup(self.response.content, 'html.parser')
 
             print(f"[SCRAPER] ✓ Página baixada ({self.load_time:.2f}s, {len(self.response.content)} bytes)")
@@ -56,7 +64,7 @@ class WebScraper:
             return False
 
     def extract_title(self) -> str:
-        """Extrai o título REAL da página"""
+        """Extract page title."""
         if not self.soup:
             return ""
 
@@ -64,7 +72,7 @@ class WebScraper:
         return title_tag.get_text(strip=True) if title_tag else ""
 
     def extract_meta_description(self) -> str:
-        """Extrai a meta description REAL"""
+        """Extract meta description from page."""
         if not self.soup:
             return ""
 
@@ -75,7 +83,7 @@ class WebScraper:
         return meta_desc.get('content', '').strip() if meta_desc else ""
 
     def extract_headings(self) -> Dict[str, List[str]]:
-        """Extrai TODOS os headings (H1-H6)"""
+        """Extract all headings (H1-H6) from page."""
         if not self.soup:
             return {}
 
@@ -87,23 +95,24 @@ class WebScraper:
         return headings
 
     def count_words(self) -> int:
-        """Conta palavras REAIS do conteúdo textual"""
+        """Count words in textual content, excluding scripts and navigation."""
         if not self.soup:
             return 0
 
-        # Remove scripts e styles
         for script in self.soup(["script", "style", "nav", "header", "footer"]):
             script.decompose()
 
-        # Pega todo texto
         text = self.soup.get_text()
-
-        # Conta palavras
         words = re.findall(r'\b\w+\b', text)
         return len(words)
 
     def count_links(self) -> Dict[str, int]:
-        """Conta links internos e externos REAIS"""
+        """
+        Count internal and external links.
+
+        Returns:
+            Dictionary with internal, external, and total link counts
+        """
         if not self.soup:
             return {'internal': 0, 'external': 0, 'total': 0}
 
@@ -113,8 +122,6 @@ class WebScraper:
 
         for link in self.soup.find_all('a', href=True):
             href = link['href']
-
-            # Resolve URLs relativas
             absolute_url = urljoin(self.url, href)
             link_domain = urlparse(absolute_url).netloc
 
@@ -129,10 +136,15 @@ class WebScraper:
             'total': internal + external
         }
 
-    def extract_images(self) -> Dict[str, any]:
-        """Analisa imagens (quantidade, alt tags)"""
+    def extract_images(self) -> Dict[str, int]:
+        """
+        Analyze images (quantity, alt tags).
+
+        Returns:
+            Dictionary with image statistics
+        """
         if not self.soup:
-            return {'total': 0, 'without_alt': 0}
+            return {'total': 0, 'without_alt': 0, 'with_alt': 0}
 
         images = self.soup.find_all('img')
         without_alt = sum(1 for img in images if not img.get('alt'))
@@ -144,7 +156,7 @@ class WebScraper:
         }
 
     def check_mobile_meta(self) -> bool:
-        """Verifica se tem meta viewport (mobile-friendly)"""
+        """Check if page has viewport meta tag (mobile-friendly)."""
         if not self.soup:
             return False
 
@@ -152,17 +164,21 @@ class WebScraper:
         return bool(viewport)
 
     def check_ssl(self) -> bool:
-        """Verifica se o site usa HTTPS"""
+        """Check if site uses HTTPS protocol."""
         return self.url.startswith('https://')
 
     def extract_schema_org(self) -> List[str]:
-        """Extrai tipos de Schema.org encontrados"""
+        """
+        Extract Schema.org types found in page.
+
+        Returns:
+            List of schema types (JSON-LD and microdata)
+        """
         if not self.soup:
             return []
 
         schemas = []
 
-        # JSON-LD
         for script in self.soup.find_all('script', type='application/ld+json'):
             try:
                 data = json.loads(script.string)
@@ -172,10 +188,9 @@ class WebScraper:
                     for item in data:
                         if isinstance(item, dict) and '@type' in item:
                             schemas.append(item['@type'])
-            except:
+            except (json.JSONDecodeError, TypeError, AttributeError):
                 pass
 
-        # Microdata
         for tag in self.soup.find_all(attrs={'itemtype': True}):
             itemtype = tag['itemtype']
             schema_type = itemtype.split('/')[-1]
@@ -184,12 +199,16 @@ class WebScraper:
         return list(set(schemas))
 
     def get_status_code(self) -> int:
-        """Retorna código HTTP"""
+        """Return HTTP status code."""
         return self.response.status_code if self.response else 0
 
     def analyze_page(self) -> Dict:
-        """Executa análise COMPLETA e REAL da página"""
+        """
+        Execute complete and real page analysis.
 
+        Returns:
+            Dictionary with all extracted data or error information
+        """
         if not self.fetch_page():
             return {
                 'success': False,
@@ -201,26 +220,18 @@ class WebScraper:
         data = {
             'success': True,
             'url': self.url,
-            'final_url': self.response.url,  # URL após redirects
+            'final_url': self.response.url,
             'status_code': self.get_status_code(),
             'load_time': round(self.load_time, 2),
-
-            # SEO Básico
             'title': self.extract_title(),
             'meta_description': self.extract_meta_description(),
             'headings': self.extract_headings(),
-
-            # Conteúdo
             'word_count': self.count_words(),
             'links': self.count_links(),
             'images': self.extract_images(),
-
-            # Técnico
             'has_ssl': self.check_ssl(),
             'mobile_friendly': self.check_mobile_meta(),
             'schema_types': self.extract_schema_org(),
-
-            # Metadados
             'content_length': len(self.response.content),
             'response_headers': dict(self.response.headers)
         }
@@ -236,30 +247,29 @@ class WebScraper:
 
 def scrape_url(url: str) -> Dict:
     """
-    Função helper para scraping rápido
+    Helper function for quick scraping.
 
     Args:
-        url: URL do site a ser analisado
+        url: Website URL to analyze
 
     Returns:
-        Dict com todos os dados extraídos ou erro
+        Dictionary with all extracted data or error
     """
     scraper = WebScraper(url)
     return scraper.analyze_page()
 
 
-# Google PageSpeed Insights API (GRATUITA)
 def get_pagespeed_insights(url: str, api_key: Optional[str] = None) -> Dict:
     """
-    Obtém dados de performance do Google PageSpeed Insights API
-    API GRATUITA com limite de 25,000 requisições/dia
+    Get performance data from Google PageSpeed Insights API.
+    Free API with 25,000 requests/day limit.
 
     Args:
-        url: URL a ser analisada
-        api_key: Opcional. Se não fornecida, usa quota anônima (mais limitada)
+        url: URL to analyze
+        api_key: Optional API key. If not provided, uses anonymous quota (more limited)
 
     Returns:
-        Dict com métricas de performance
+        Dictionary with performance metrics or error
     """
     try:
         api_url = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
@@ -267,7 +277,6 @@ def get_pagespeed_insights(url: str, api_key: Optional[str] = None) -> Dict:
         params = {
             'url': url,
             'category': 'performance',
-            'category': 'seo',
             'strategy': 'mobile'
         }
 
@@ -280,13 +289,13 @@ def get_pagespeed_insights(url: str, api_key: Optional[str] = None) -> Dict:
 
         data = response.json()
 
-        # Extrair métricas principais
         lighthouse_result = data.get('lighthouseResult', {})
         audits = lighthouse_result.get('audits', {})
+        categories = lighthouse_result.get('categories', {})
 
         metrics = {
-            'performance_score': lighthouse_result.get('categories', {}).get('performance', {}).get('score', 0) * 100,
-            'seo_score': lighthouse_result.get('categories', {}).get('seo', {}).get('score', 0) * 100,
+            'performance_score': categories.get('performance', {}).get('score', 0) * 100,
+            'seo_score': categories.get('seo', {}).get('score', 0) * 100,
             'first_contentful_paint': audits.get('first-contentful-paint', {}).get('displayValue', 'N/A'),
             'speed_index': audits.get('speed-index', {}).get('displayValue', 'N/A'),
             'largest_contentful_paint': audits.get('largest-contentful-paint', {}).get('displayValue', 'N/A'),

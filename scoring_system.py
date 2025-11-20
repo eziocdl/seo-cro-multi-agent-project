@@ -1,399 +1,448 @@
 """
-Sistema de Pontuação para Análise de Sites
-Calcula scores de SEO, CRO e GEO baseado APENAS em dados reais extraídos
-Seguindo metodologia do documents.md - SEM ALUCINAÇÕES
+Scoring system for site analysis.
+Calculates SEO, CRO, and GEO scores based ONLY on real extracted data.
 """
 
 from typing import Dict, Tuple
 from datetime import datetime
 
+TITLE_OPTIMAL_MIN = 50
+TITLE_OPTIMAL_MAX = 60
+TITLE_GOOD_MIN = 40
+TITLE_GOOD_MAX = 70
+
+META_DESC_OPTIMAL_MIN = 150
+META_DESC_OPTIMAL_MAX = 160
+META_DESC_GOOD_MIN = 140
+META_DESC_GOOD_MAX = 170
+
+WORD_COUNT_EXCELLENT = 1000
+WORD_COUNT_GOOD = 300
+WORD_COUNT_BASIC = 100
+
+LOAD_TIME_EXCELLENT = 1.5
+LOAD_TIME_GOOD = 2.5
+LOAD_TIME_MEDIUM = 4.0
+LOAD_TIME_BAD = 6.0
+
+LOAD_TIME_CRO_EXCELLENT = 2.0
+LOAD_TIME_CRO_GOOD = 3.5
+LOAD_TIME_CRO_MEDIUM = 5.0
+
+WORD_COUNT_CRO_MIN = 500
+WORD_COUNT_CRO_MAX = 3000
+WORD_COUNT_CRO_ADEQUATE = 300
+
+WORD_COUNT_GEO_EXCELLENT = 800
+WORD_COUNT_GEO_GOOD = 400
+WORD_COUNT_GEO_BASIC = 200
+
+MAX_POINTS_PER_CATEGORY = 25
+MAX_POINTS_CRO_CATEGORY = 20
+
+SCORE_EXCELLENT = 80
+SCORE_GOOD = 60
+SCORE_REQUIRES_OPTIMIZATION = 40
+
+SEO_WEIGHT = 0.4
+CRO_WEIGHT = 0.3
+GEO_WEIGHT = 0.3
+
 
 class SiteScoreCalculator:
-    """Calcula scores objetivos baseados em dados reais"""
+    """Calculate objective scores based on real data."""
 
     def __init__(self, real_data: Dict):
         """
+        Initialize calculator with real scraped data.
+
         Args:
-            real_data: Dados reais extraídos do web_scraper.py
+            real_data: Real data extracted from web_scraper.py
         """
         self.data = real_data
         self.timestamp = datetime.now().strftime("%d/%m/%Y às %H:%M:%S")
 
     def calculate_seo_score(self) -> Tuple[int, Dict[str, int]]:
         """
-        Calcula SEO Health Score (0-100)
+        Calculate SEO Health Score (0-100).
 
-        Componentes:
-        - On-Page SEO (25 pontos)
-        - Technical SEO (25 pontos)
-        - Content Quality (25 pontos)
-        - Core Web Vitals (25 pontos)
+        Components:
+        - On-Page SEO (25 points)
+        - Technical SEO (25 points)
+        - Content Quality (25 points)
+        - Core Web Vitals (25 points)
 
         Returns:
-            (score_total, breakdown_dict)
+            Tuple of (total_score, breakdown_dict)
         """
         scores = {}
 
-        # 1. ON-PAGE SEO (25 pontos)
-        on_page = 0
+        scores['on_page_seo'] = self._calculate_on_page_seo()
+        scores['technical_seo'] = self._calculate_technical_seo()
+        scores['content_quality'] = self._calculate_content_quality()
+        scores['core_web_vitals'] = self._calculate_core_web_vitals()
 
-        # Title tag (8 pontos)
+        total_seo = sum(scores.values())
+        return total_seo, scores
+
+    def _calculate_on_page_seo(self) -> int:
+        """Calculate on-page SEO score (max 25 points)."""
+        score = 0
+
         title_len = len(self.data.get('title', ''))
-        if 50 <= title_len <= 60:
-            on_page += 8
-        elif 40 <= title_len <= 70:
-            on_page += 5
+        if TITLE_OPTIMAL_MIN <= title_len <= TITLE_OPTIMAL_MAX:
+            score += 8
+        elif TITLE_GOOD_MIN <= title_len <= TITLE_GOOD_MAX:
+            score += 5
         elif title_len > 0:
-            on_page += 2
+            score += 2
 
-        # Meta description (8 pontos)
         meta_len = len(self.data.get('meta_description', ''))
-        if 150 <= meta_len <= 160:
-            on_page += 8
-        elif 140 <= meta_len <= 170:
-            on_page += 5
+        if META_DESC_OPTIMAL_MIN <= meta_len <= META_DESC_OPTIMAL_MAX:
+            score += 8
+        elif META_DESC_GOOD_MIN <= meta_len <= META_DESC_GOOD_MAX:
+            score += 5
         elif meta_len > 0:
-            on_page += 2
+            score += 2
 
-        # H1 tags - deve ter exatamente 1 (9 pontos)
         h1_count = len(self.data.get('headings', {}).get('h1', []))
         if h1_count == 1:
-            on_page += 9
+            score += 9
         elif h1_count > 0:
-            on_page += 4
+            score += 4
 
-        scores['on_page_seo'] = min(on_page, 25)
+        return min(score, MAX_POINTS_PER_CATEGORY)
 
-        # 2. TECHNICAL SEO (25 pontos)
-        technical = 0
+    def _calculate_technical_seo(self) -> int:
+        """Calculate technical SEO score (max 25 points)."""
+        score = 0
 
-        # HTTPS/SSL (10 pontos)
         if self.data.get('has_ssl', False):
-            technical += 10
+            score += 10
 
-        # Mobile-friendly (10 pontos)
         if self.data.get('mobile_friendly', False):
-            technical += 10
+            score += 10
 
-        # Schema.org structured data (5 pontos)
         schema_count = len(self.data.get('schema_types', []))
         if schema_count >= 3:
-            technical += 5
+            score += 5
         elif schema_count >= 1:
-            technical += 3
+            score += 3
 
-        scores['technical_seo'] = min(technical, 25)
+        return min(score, MAX_POINTS_PER_CATEGORY)
 
-        # 3. CONTENT QUALITY (25 pontos)
-        content = 0
+    def _calculate_content_quality(self) -> int:
+        """Calculate content quality score (max 25 points)."""
+        score = 0
 
-        # Word count (10 pontos)
         word_count = self.data.get('word_count', 0)
-        if word_count >= 1000:
-            content += 10
-        elif word_count >= 300:
-            content += 7
-        elif word_count >= 100:
-            content += 4
+        if word_count >= WORD_COUNT_EXCELLENT:
+            score += 10
+        elif word_count >= WORD_COUNT_GOOD:
+            score += 7
+        elif word_count >= WORD_COUNT_BASIC:
+            score += 4
 
-        # Images with alt text (10 pontos)
         images_total = self.data.get('images', {}).get('total', 0)
         images_without_alt = self.data.get('images', {}).get('without_alt', 0)
 
         if images_total > 0:
             alt_coverage = ((images_total - images_without_alt) / images_total) * 100
             if alt_coverage >= 90:
-                content += 10
+                score += 10
             elif alt_coverage >= 70:
-                content += 7
+                score += 7
             elif alt_coverage >= 50:
-                content += 4
+                score += 4
 
-        # Internal links (5 pontos)
         internal_links = self.data.get('links', {}).get('internal', 0)
         if internal_links >= 10:
-            content += 5
+            score += 5
         elif internal_links >= 5:
-            content += 3
+            score += 3
         elif internal_links >= 1:
-            content += 1
+            score += 1
 
-        scores['content_quality'] = min(content, 25)
+        return min(score, MAX_POINTS_PER_CATEGORY)
 
-        # 4. CORE WEB VITALS / PERFORMANCE (25 pontos)
-        performance = 0
-
-        # Load time (25 pontos) - proxy para Core Web Vitals
+    def _calculate_core_web_vitals(self) -> int:
+        """Calculate core web vitals / performance score (max 25 points)."""
         load_time = self.data.get('load_time', 999)
-        if load_time <= 1.5:
-            performance += 25  # Excelente
-        elif load_time <= 2.5:
-            performance += 20  # Bom
-        elif load_time <= 4.0:
-            performance += 12  # Médio
-        elif load_time <= 6.0:
-            performance += 6   # Ruim
+
+        if load_time <= LOAD_TIME_EXCELLENT:
+            return 25
+        elif load_time <= LOAD_TIME_GOOD:
+            return 20
+        elif load_time <= LOAD_TIME_MEDIUM:
+            return 12
+        elif load_time <= LOAD_TIME_BAD:
+            return 6
         else:
-            performance += 2   # Crítico
-
-        scores['core_web_vitals'] = min(performance, 25)
-
-        # TOTAL SEO SCORE
-        total_seo = sum(scores.values())
-
-        return total_seo, scores
+            return 2
 
     def calculate_cro_score(self) -> Tuple[int, Dict[str, int]]:
         """
-        Calcula CRO Readiness Score (0-100)
+        Calculate CRO Readiness Score (0-100).
 
-        Componentes:
-        - CTA Effectiveness (20 pontos) - inferido de links
-        - Form Optimization (20 pontos) - não disponível
-        - Trust & Credibility (20 pontos)
-        - Page Experience (20 pontos)
-        - Mobile Readiness (20 pontos)
+        Components:
+        - CTA Effectiveness (20 points)
+        - Form Optimization (20 points)
+        - Trust & Credibility (20 points)
+        - Page Experience (20 points)
+        - Mobile Readiness (20 points)
 
         Returns:
-            (score_total, breakdown_dict)
+            Tuple of (total_score, breakdown_dict)
         """
         scores = {}
 
-        # 1. CTA EFFECTIVENESS (20 pontos) - inferido de links externos como potencial CTA
-        cta = 0
-        external_links = self.data.get('links', {}).get('external', 0)
-        total_links = self.data.get('links', {}).get('total', 0)
-
-        # Presença de links pode indicar CTAs
-        if total_links >= 5:
-            cta += 10
-        elif total_links >= 2:
-            cta += 5
-
-        # Balance entre links internos e externos
-        internal_links = self.data.get('links', {}).get('internal', 0)
-        if internal_links > external_links and internal_links > 0:
-            cta += 10  # Boa navegação interna
-
-        scores['cta_effectiveness'] = min(cta, 20)
-
-        # 2. FORM OPTIMIZATION (20 pontos) - DADOS NÃO DISPONÍVEIS
-        # Não temos dados de formulários ainda
+        scores['cta_effectiveness'] = self._calculate_cta_effectiveness()
         scores['form_optimization'] = 0
+        scores['trust_credibility'] = self._calculate_trust_credibility()
+        scores['page_experience'] = self._calculate_page_experience()
+        scores['mobile_readiness'] = self._calculate_mobile_readiness()
 
-        # 3. TRUST & CREDIBILITY (20 pontos)
-        trust = 0
-
-        # HTTPS (15 pontos)
-        if self.data.get('has_ssl', False):
-            trust += 15
-
-        # Schema.org (indica profissionalismo) (5 pontos)
-        if len(self.data.get('schema_types', [])) > 0:
-            trust += 5
-
-        scores['trust_credibility'] = min(trust, 20)
-
-        # 4. PAGE EXPERIENCE (20 pontos)
-        experience = 0
-
-        # Load time (10 pontos)
-        load_time = self.data.get('load_time', 999)
-        if load_time <= 2.0:
-            experience += 10
-        elif load_time <= 3.5:
-            experience += 6
-        elif load_time <= 5.0:
-            experience += 3
-
-        # Conteúdo adequado (10 pontos)
-        word_count = self.data.get('word_count', 0)
-        if 500 <= word_count <= 3000:
-            experience += 10
-        elif word_count >= 300:
-            experience += 6
-
-        scores['page_experience'] = min(experience, 20)
-
-        # 5. MOBILE READINESS (20 pontos)
-        mobile = 0
-
-        # Mobile-friendly meta tag (15 pontos)
-        if self.data.get('mobile_friendly', False):
-            mobile += 15
-
-        # Performance em mobile (load time) (5 pontos)
-        if load_time <= 3.0:
-            mobile += 5
-        elif load_time <= 5.0:
-            mobile += 2
-
-        scores['mobile_readiness'] = min(mobile, 20)
-
-        # TOTAL CRO SCORE
         total_cro = sum(scores.values())
-
         return total_cro, scores
+
+    def _calculate_cta_effectiveness(self) -> int:
+        """Calculate CTA effectiveness score (max 20 points)."""
+        score = 0
+        total_links = self.data.get('links', {}).get('total', 0)
+        internal_links = self.data.get('links', {}).get('internal', 0)
+        external_links = self.data.get('links', {}).get('external', 0)
+
+        if total_links >= 5:
+            score += 10
+        elif total_links >= 2:
+            score += 5
+
+        if internal_links > external_links and internal_links > 0:
+            score += 10
+
+        return min(score, MAX_POINTS_CRO_CATEGORY)
+
+    def _calculate_trust_credibility(self) -> int:
+        """Calculate trust & credibility score (max 20 points)."""
+        score = 0
+
+        if self.data.get('has_ssl', False):
+            score += 15
+
+        if len(self.data.get('schema_types', [])) > 0:
+            score += 5
+
+        return min(score, MAX_POINTS_CRO_CATEGORY)
+
+    def _calculate_page_experience(self) -> int:
+        """Calculate page experience score (max 20 points)."""
+        score = 0
+
+        load_time = self.data.get('load_time', 999)
+        if load_time <= LOAD_TIME_CRO_EXCELLENT:
+            score += 10
+        elif load_time <= LOAD_TIME_CRO_GOOD:
+            score += 6
+        elif load_time <= LOAD_TIME_CRO_MEDIUM:
+            score += 3
+
+        word_count = self.data.get('word_count', 0)
+        if WORD_COUNT_CRO_MIN <= word_count <= WORD_COUNT_CRO_MAX:
+            score += 10
+        elif word_count >= WORD_COUNT_CRO_ADEQUATE:
+            score += 6
+
+        return min(score, MAX_POINTS_CRO_CATEGORY)
+
+    def _calculate_mobile_readiness(self) -> int:
+        """Calculate mobile readiness score (max 20 points)."""
+        score = 0
+
+        if self.data.get('mobile_friendly', False):
+            score += 15
+
+        load_time = self.data.get('load_time', 999)
+        if load_time <= 3.0:
+            score += 5
+        elif load_time <= 5.0:
+            score += 2
+
+        return min(score, MAX_POINTS_CRO_CATEGORY)
 
     def calculate_geo_score(self) -> Tuple[int, Dict[str, int]]:
         """
-        Calcula GEO Readiness Score (0-100)
+        Calculate GEO Readiness Score (0-100).
 
-        Componentes:
-        - Structured Data Quality (25 pontos)
-        - AI Content Format (25 pontos)
-        - Knowledge Graph Signals (25 pontos)
-        - Hallucination Risk Management (25 pontos)
+        Components:
+        - Structured Data Quality (25 points)
+        - AI Content Format (25 points)
+        - Knowledge Graph Signals (25 points)
+        - Hallucination Risk Management (25 points)
 
         Returns:
-            (score_total, breakdown_dict)
+            Tuple of (total_score, breakdown_dict)
         """
         scores = {}
 
-        # 1. STRUCTURED DATA QUALITY (25 pontos)
-        structured = 0
+        scores['structured_data_quality'] = self._calculate_structured_data_quality()
+        scores['ai_content_format'] = self._calculate_ai_content_format()
+        scores['knowledge_graph_signals'] = self._calculate_knowledge_graph_signals()
+        scores['hallucination_risk_mgmt'] = self._calculate_hallucination_risk_mgmt()
 
+        total_geo = sum(scores.values())
+        return total_geo, scores
+
+    def _calculate_structured_data_quality(self) -> int:
+        """Calculate structured data quality score (max 25 points)."""
+        score = 0
         schema_types = self.data.get('schema_types', [])
         schema_count = len(schema_types)
 
-        # Quantidade de schemas implementados (15 pontos)
         if schema_count >= 5:
-            structured += 15
+            score += 15
         elif schema_count >= 3:
-            structured += 12
+            score += 12
         elif schema_count >= 1:
-            structured += 8
+            score += 8
 
-        # Tipos específicos importantes (10 pontos)
         important_schemas = ['Organization', 'Article', 'LocalBusiness', 'Product', 'FAQPage']
         matches = sum(1 for schema in schema_types if any(imp in schema for imp in important_schemas))
 
         if matches >= 3:
-            structured += 10
+            score += 10
         elif matches >= 2:
-            structured += 6
+            score += 6
         elif matches >= 1:
-            structured += 3
+            score += 3
 
-        scores['structured_data_quality'] = min(structured, 25)
+        return min(score, MAX_POINTS_PER_CATEGORY)
 
-        # 2. AI CONTENT FORMAT (25 pontos)
-        ai_format = 0
+    def _calculate_ai_content_format(self) -> int:
+        """Calculate AI content format score (max 25 points)."""
+        score = 0
 
-        # Hierarquia de headings clara (H1-H6) (15 pontos)
         headings = self.data.get('headings', {})
         h1_count = len(headings.get('h1', []))
         h2_count = len(headings.get('h2', []))
-        h3_count = len(headings.get('h3', []))
 
-        # H1 único e hierarquia presente
         if h1_count == 1 and h2_count >= 2:
-            ai_format += 15
+            score += 15
         elif h1_count == 1:
-            ai_format += 10
+            score += 10
         elif h2_count >= 2:
-            ai_format += 8
+            score += 8
 
-        # Word count adequado para IA extrair informações (10 pontos)
         word_count = self.data.get('word_count', 0)
-        if word_count >= 800:
-            ai_format += 10
-        elif word_count >= 400:
-            ai_format += 6
-        elif word_count >= 200:
-            ai_format += 3
+        if word_count >= WORD_COUNT_GEO_EXCELLENT:
+            score += 10
+        elif word_count >= WORD_COUNT_GEO_GOOD:
+            score += 6
+        elif word_count >= WORD_COUNT_GEO_BASIC:
+            score += 3
 
-        scores['ai_content_format'] = min(ai_format, 25)
+        return min(score, MAX_POINTS_PER_CATEGORY)
 
-        # 3. KNOWLEDGE GRAPH SIGNALS (25 pontos)
-        knowledge = 0
+    def _calculate_knowledge_graph_signals(self) -> int:
+        """Calculate knowledge graph signals score (max 25 points)."""
+        score = 0
+        schema_types = self.data.get('schema_types', [])
 
-        # Schema Organization/LocalBusiness (10 pontos)
         if any('Organization' in s or 'LocalBusiness' in s for s in schema_types):
-            knowledge += 10
+            score += 10
 
-        # Meta description (entidades mencionadas) (5 pontos)
         if len(self.data.get('meta_description', '')) >= 100:
-            knowledge += 5
+            score += 5
 
-        # Title tag bem estruturado (5 pontos)
         title = self.data.get('title', '')
-        if len(title) >= 40 and ' | ' in title or ' - ' in title:
-            knowledge += 5
+        if len(title) >= 40 and (' | ' in title or ' - ' in title):
+            score += 5
 
-        # Internal linking (sinaliza estrutura de conhecimento) (5 pontos)
         internal_links = self.data.get('links', {}).get('internal', 0)
         if internal_links >= 15:
-            knowledge += 5
+            score += 5
         elif internal_links >= 8:
-            knowledge += 3
+            score += 3
 
-        scores['knowledge_graph_signals'] = min(knowledge, 25)
+        return min(score, MAX_POINTS_PER_CATEGORY)
 
-        # 4. HALLUCINATION RISK MANAGEMENT (25 pontos)
-        hallucination = 0
+    def _calculate_hallucination_risk_mgmt(self) -> int:
+        """Calculate hallucination risk management score (max 25 points)."""
+        score = 0
+        schema_count = len(self.data.get('schema_types', []))
+        h1_count = len(self.data.get('headings', {}).get('h1', []))
+        word_count = self.data.get('word_count', 0)
 
-        # Structured data presente (reduz alucinações) (10 pontos)
         if schema_count >= 2:
-            hallucination += 10
+            score += 10
         elif schema_count >= 1:
-            hallucination += 5
+            score += 5
 
-        # Conteúdo bem estruturado (10 pontos)
         if h1_count == 1 and word_count >= 300:
-            hallucination += 10
+            score += 10
         elif word_count >= 150:
-            hallucination += 5
+            score += 5
 
-        # Meta tags completos (IA tem contexto claro) (5 pontos)
         if len(self.data.get('title', '')) >= 30 and len(self.data.get('meta_description', '')) >= 100:
-            hallucination += 5
+            score += 5
 
-        scores['hallucination_risk_mgmt'] = min(hallucination, 25)
-
-        # TOTAL GEO SCORE
-        total_geo = sum(scores.values())
-
-        return total_geo, scores
+        return min(score, MAX_POINTS_PER_CATEGORY)
 
     def get_overall_score(self) -> int:
-        """Calcula score geral médio ponderado"""
+        """
+        Calculate weighted overall score.
+
+        Weights: SEO 40%, CRO 30%, GEO 30%
+
+        Returns:
+            Overall score (0-100)
+        """
         seo_score, _ = self.calculate_seo_score()
         cro_score, _ = self.calculate_cro_score()
         geo_score, _ = self.calculate_geo_score()
 
-        # Peso: SEO 40%, CRO 30%, GEO 30%
-        overall = int((seo_score * 0.4) + (cro_score * 0.3) + (geo_score * 0.3))
+        overall = int((seo_score * SEO_WEIGHT) + (cro_score * CRO_WEIGHT) + (geo_score * GEO_WEIGHT))
         return overall
 
     def get_classification(self, score: int) -> Tuple[str, str]:
         """
-        Retorna classificação textual do score
+        Return textual classification of score.
+
+        Args:
+            score: Score value (0-100)
 
         Returns:
-            (classificação, status_code)
+            Tuple of (classification, status_code)
         """
-        if score >= 80:
+        if score >= SCORE_EXCELLENT:
             return ("Excelente", "A")
-        elif score >= 60:
+        elif score >= SCORE_GOOD:
             return ("Bom", "B")
-        elif score >= 40:
+        elif score >= SCORE_REQUIRES_OPTIMIZATION:
             return ("Requer Otimização", "C")
         else:
             return ("Crítico", "D")
 
     def generate_progress_bar(self, score: int, max_width: int = 20) -> str:
-        """Gera barra de progresso visual ASCII"""
+        """
+        Generate visual ASCII progress bar.
+
+        Args:
+            score: Score value (0-100)
+            max_width: Maximum width of progress bar
+
+        Returns:
+            ASCII progress bar string
+        """
         filled = int((score / 100) * max_width)
         empty = max_width - filled
         return "█" * filled + "░" * empty
 
     def get_full_report_data(self) -> Dict:
         """
-        Retorna todos os dados de scoring para uso no relatório
+        Return all scoring data for report use.
 
         Returns:
-            Dict com todos os scores, breakdowns e classificações
+            Dictionary with all scores, breakdowns, and classifications
         """
         seo_score, seo_breakdown = self.calculate_seo_score()
         cro_score, cro_breakdown = self.calculate_cro_score()
@@ -434,13 +483,13 @@ class SiteScoreCalculator:
 
 def calculate_scores(real_data: Dict) -> Dict:
     """
-    Função helper para calcular todos os scores de forma simplificada
+    Helper function to calculate all scores in simplified way.
 
     Args:
-        real_data: Dados extraídos do web_scraper
+        real_data: Data extracted from web_scraper
 
     Returns:
-        Dict completo com todos os scores e análises
+        Complete dictionary with all scores and analysis
     """
     calculator = SiteScoreCalculator(real_data)
     return calculator.get_full_report_data()

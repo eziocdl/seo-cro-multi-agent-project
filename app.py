@@ -1,92 +1,134 @@
-# app.py
-
 import os
 import io
 import json
+from typing import Dict, Tuple, Optional
 from flask import Flask, request, jsonify, send_from_directory, send_file
 from flask_cors import CORS
 from dotenv import load_dotenv
 
-# Carregar variáveis de ambiente
 load_dotenv()
 
 app = Flask(__name__, static_folder='public', static_url_path='')
 CORS(app)
 
-# Health check endpoint
+GEMINI_MODEL = 'gemini-1.5-flash'
+DEFAULT_PORT = 8000
+REQUEST_TIMEOUT = 180
+GUNICORN_WORKERS = 1
+GUNICORN_THREADS = 2
+
+API_VERSION = '1.0.0'
+SERVICE_NAME = 'AI SEO Audit Team API'
+
+
 @app.route('/health', methods=['GET'])
-def health_check():
-    """Endpoint para verificar se o servidor está rodando"""
+def health_check() -> Tuple[Dict, int]:
+    """Health check endpoint for monitoring service status."""
     return jsonify({
         'status': 'healthy',
-        'service': 'AI SEO Audit Team API',
-        'version': '1.0.0'
+        'service': SERVICE_NAME,
+        'version': API_VERSION
     }), 200
+
 
 @app.route('/')
 def index():
-    """Serve o frontend"""
+    """Serve frontend application."""
     return send_from_directory('public', 'index.html')
 
+
 @app.route('/invoke', methods=['POST'])
-def invoke_agent():
-    """Executa o pipeline de agentes de IA para análise SEO/CRO"""
+def invoke_agent() -> Tuple[Dict, int]:
+    """
+    Execute AI agent pipeline for SEO/CRO/GEO analysis.
+
+    Returns:
+        JSON response with markdown report or error message
+    """
     data = request.get_json()
     url = data.get('message', '')
 
     if not url:
         return jsonify({'error': 'URL não fornecida'}), 400
 
-    # Validação básica de URL
     if not url.startswith('http://') and not url.startswith('https://'):
         url = 'https://' + url
 
     print(f"[INFO] Iniciando análise para URL: {url}")
 
     try:
-        # Importar Google GenAI diretamente
         from google import genai
-        from google.genai import types
-        from web_scraper import scrape_url, get_pagespeed_insights
+        from web_scraper import scrape_url
         from scoring_system import calculate_scores
 
-        # Configurar cliente
         api_key = os.getenv('GOOGLE_API_KEY')
         if not api_key:
             return jsonify({'error': 'GOOGLE_API_KEY não configurada'}), 500
 
         client = genai.Client(api_key=api_key)
-
         print(f"[DEBUG] Executando pipeline de 4 agentes com DADOS REAIS...")
 
-        # ===== ETAPA 0: SCRAPING REAL DO SITE =====
-        print(f"[SCRAPING] Coletando dados REAIS do site...")
         real_data = scrape_url(url)
-
         if not real_data.get('success'):
             return jsonify({
                 'error': f"Não foi possível acessar o site: {real_data.get('error', 'Erro desconhecido')}"
             }), 400
 
-        print(f"[SCRAPING] ✓ Dados reais coletados!")
-        print(f"[SCRAPING]   URL Final: {real_data['final_url']}")
+        print(f"[SCRAPING] ✓ Dados coletados!")
+        print(f"[SCRAPING]   URL: {real_data['final_url']}")
         print(f"[SCRAPING]   Status: {real_data['status_code']}")
         print(f"[SCRAPING]   Tempo: {real_data['load_time']}s")
 
-        # ===== CALCULAR SCORES BASEADOS EM DADOS REAIS =====
-        print(f"[SCORING] Calculando scores SEO, CRO e GEO...")
         scores_data = calculate_scores(real_data)
         print(f"[SCORING] ✓ Scores calculados:")
-        print(f"[SCORING]   SEO Score: {scores_data['seo']['score']}/100 ({scores_data['seo']['classification']})")
-        print(f"[SCORING]   CRO Score: {scores_data['cro']['score']}/100 ({scores_data['cro']['classification']})")
-        print(f"[SCORING]   GEO Score: {scores_data['geo']['score']}/100 ({scores_data['geo']['classification']})")
-        print(f"[SCORING]   Overall: {scores_data['overall']['score']}/100 ({scores_data['overall']['classification']})")
+        print(f"[SCORING]   SEO: {scores_data['seo']['score']}/100 ({scores_data['seo']['classification']})")
+        print(f"[SCORING]   CRO: {scores_data['cro']['score']}/100 ({scores_data['cro']['classification']})")
+        print(f"[SCORING]   GEO: {scores_data['geo']['score']}/100 ({scores_data['geo']['classification']})")
+        print(f"[SCORING]   Overall: {scores_data['overall']['score']}/100")
 
-        # ===== AGENTE 1: Page Auditor (COM DADOS REAIS) =====
-        print(f"[AGENT 1] Page Auditor - Analisando dados REAIS...")
+        page_audit = _execute_page_auditor(client, real_data)
+        serp_analysis = _execute_serp_analyst(client, page_audit)
+        cro_analysis = _execute_cro_analyst(client, real_data)
+        final_report = _execute_strategic_advisor(client, url, real_data, scores_data,
+                                                   page_audit, serp_analysis, cro_analysis)
 
-        # Preparar dados reais para análise
-        real_data_summary = f"""
+        print(f"[SUCCESS] Análise completa finalizada!")
+        return jsonify({'output': final_report})
+
+    except json.JSONDecodeError as e:
+        error_msg = f'Erro ao processar JSON dos agentes: {str(e)}'
+        print(f"[ERROR] {error_msg}")
+        return jsonify({'error': error_msg}), 500
+
+    except ImportError as e:
+        error_msg = f'Erro ao importar google.genai: {str(e)}'
+        print(f"[ERROR] {error_msg}")
+        return jsonify({'error': 'Módulo google-genai não disponível'}), 500
+
+    except Exception as e:
+        import traceback
+        error_trace = traceback.format_exc()
+        print(f"[ERROR] Exception: {error_trace}")
+        return jsonify({
+            'error': f'Erro interno: {str(e)}',
+            'details': error_trace if app.debug else None
+        }), 500
+
+
+def _execute_page_auditor(client, real_data: Dict) -> Dict:
+    """
+    Agent 1: Page Auditor - Analyzes SEO on-page with real data.
+
+    Args:
+        client: Google GenAI client
+        real_data: Real data extracted from website
+
+    Returns:
+        Dictionary with audit results and target keywords
+    """
+    print(f"[AGENT 1] Page Auditor - Analisando dados REAIS...")
+
+    real_data_summary = f"""
 DADOS REAIS EXTRAÍDOS DO SITE:
 - URL: {real_data['url']}
 - Título Real: {real_data['title']}
@@ -101,7 +143,7 @@ DADOS REAIS EXTRAÍDOS DO SITE:
 - Tempo de carregamento: {real_data['load_time']}s
 """
 
-        page_audit_prompt = f"""You are Agent 1 in a sequential SEO workflow. You have REAL DATA extracted from the website.
+    page_audit_prompt = f"""You are Agent 1 in a sequential SEO workflow. You have REAL DATA extracted from the website.
 
 REAL DATA FROM THE SITE:
 {real_data_summary}
@@ -129,25 +171,33 @@ Return ONLY a JSON object:
 
 IMPORTANT: Use ONLY the real data provided. DO NOT simulate or invent data."""
 
-        response1 = client.models.generate_content(
-            model='gemini-1.5-flash',
-            contents=page_audit_prompt
-        )
-        page_audit_text = response1.text.strip()
+    response = client.models.generate_content(
+        model=GEMINI_MODEL,
+        contents=page_audit_prompt
+    )
 
-        # Extrair JSON da resposta
-        if '```json' in page_audit_text:
-            page_audit_text = page_audit_text.split('```json')[1].split('```')[0].strip()
-        elif '```' in page_audit_text:
-            page_audit_text = page_audit_text.split('```')[1].split('```')[0].strip()
+    result_text = _extract_json_from_response(response.text.strip())
+    page_audit = json.loads(result_text)
 
-        page_audit = json.loads(page_audit_text)
-        print(f"[AGENT 1] ✓ Concluído - Palavra-chave: {page_audit['target_keywords']['primary_keyword']}")
+    print(f"[AGENT 1] ✓ Concluído - Palavra-chave: {page_audit['target_keywords']['primary_keyword']}")
+    return page_audit
 
-        # ===== AGENTE 2: SERP Analyst =====
-        print(f"[AGENT 2] SERP Analyst - Iniciando...")
-        primary_keyword = page_audit['target_keywords']['primary_keyword']
-        serp_prompt = f"""You are Agent 2. Your function is to analyze the competitive SERP for the keyword: "{primary_keyword}"
+
+def _execute_serp_analyst(client, page_audit: Dict) -> Dict:
+    """
+    Agent 2: SERP Analyst - Simulates competitive SERP analysis.
+
+    Args:
+        client: Google GenAI client
+        page_audit: Results from Page Auditor
+
+    Returns:
+        Dictionary with SERP analysis and content opportunities
+    """
+    print(f"[AGENT 2] SERP Analyst - Iniciando...")
+
+    primary_keyword = page_audit['target_keywords']['primary_keyword']
+    serp_prompt = f"""You are Agent 2. Your function is to analyze the competitive SERP for the keyword: "{primary_keyword}"
 
 *Simulate* the competitive SERP for that keyword, inferring:
 - Top competitor titles
@@ -164,25 +214,32 @@ Return ONLY a JSON object:
   "content_opportunities": ["oportunidade 1", "oportunidade 2"]
 }}"""
 
-        response2 = client.models.generate_content(
-            model='gemini-1.5-flash',
-            contents=serp_prompt
-        )
-        serp_text = response2.text.strip()
+    response = client.models.generate_content(
+        model=GEMINI_MODEL,
+        contents=serp_prompt
+    )
 
-        if '```json' in serp_text:
-            serp_text = serp_text.split('```json')[1].split('```')[0].strip()
-        elif '```' in serp_text:
-            serp_text = serp_text.split('```')[1].split('```')[0].strip()
+    result_text = _extract_json_from_response(response.text.strip())
+    serp_analysis = json.loads(result_text)
 
-        serp_analysis = json.loads(serp_text)
-        print(f"[AGENT 2] ✓ Concluído - {len(serp_analysis.get('serp_results', []))} resultados simulados")
+    print(f"[AGENT 2] ✓ Concluído - {len(serp_analysis.get('serp_results', []))} resultados simulados")
+    return serp_analysis
 
-        # ===== AGENTE 3: CRO Analyst (COM DADOS REAIS) =====
-        print(f"[AGENT 3] CRO Analyst - Analisando usabilidade com dados REAIS...")
 
-        # Preparar dados técnicos reais para análise CRO
-        cro_real_data = f"""
+def _execute_cro_analyst(client, real_data: Dict) -> Dict:
+    """
+    Agent 3: CRO Analyst - Analyzes usability and conversion optimization.
+
+    Args:
+        client: Google GenAI client
+        real_data: Real data extracted from website
+
+    Returns:
+        Dictionary with usability findings and conversion opportunities
+    """
+    print(f"[AGENT 3] CRO Analyst - Analisando usabilidade com dados REAIS...")
+
+    cro_real_data = f"""
 DADOS TÉCNICOS REAIS PARA ANÁLISE CRO:
 - Tempo de carregamento REAL: {real_data['load_time']}s
 - Mobile-friendly: {"✓ Sim" if real_data['mobile_friendly'] else "✗ NÃO (PROBLEMA CRÍTICO)"}
@@ -193,9 +250,9 @@ DADOS TÉCNICOS REAIS PARA ANÁLISE CRO:
 - Status HTTP: {real_data['status_code']}
 """
 
-        cro_prompt = f"""You are Agent 3, specialized in CRO and UX. Analyze REAL technical data from the website.
+    cro_prompt = f"""You are Agent 3, specialized in CRO and UX. Analyze REAL technical data from the website.
 
-URL: {url}
+URL: {real_data['url']}
 
 REAL TECHNICAL DATA:
 {cro_real_data}
@@ -221,23 +278,38 @@ Return ONLY a JSON object:
 
 IMPORTANT: Base your analysis ONLY on the real data provided. If mobile-friendly is false, that's a HIGH severity issue. If load time > 3s, that's a problem. Be specific and reference real numbers."""
 
-        response3 = client.models.generate_content(
-            model='gemini-1.5-flash',
-            contents=cro_prompt
-        )
-        cro_text = response3.text.strip()
+    response = client.models.generate_content(
+        model=GEMINI_MODEL,
+        contents=cro_prompt
+    )
 
-        if '```json' in cro_text:
-            cro_text = cro_text.split('```json')[1].split('```')[0].strip()
-        elif '```' in cro_text:
-            cro_text = cro_text.split('```')[1].split('```')[0].strip()
+    result_text = _extract_json_from_response(response.text.strip())
+    cro_analysis = json.loads(result_text)
 
-        cro_analysis = json.loads(cro_text)
-        print(f"[AGENT 3] ✓ Concluído - {len(cro_analysis.get('conversion_opportunities', []))} oportunidades")
+    print(f"[AGENT 3] ✓ Concluído - {len(cro_analysis.get('conversion_opportunities', []))} oportunidades")
+    return cro_analysis
 
-        # ===== AGENTE 4: Strategic Advisor =====
-        print(f"[AGENT 4] Strategic Advisor - Gerando relatório final...")
-        final_prompt = f"""You are a Senior Digital Strategist. Generate a PROFESSIONAL, CONCISE report in Portuguese (pt-BR) for {url}.
+
+def _execute_strategic_advisor(client, url: str, real_data: Dict, scores_data: Dict,
+                                page_audit: Dict, serp_analysis: Dict, cro_analysis: Dict) -> str:
+    """
+    Agent 4: Strategic Advisor - Generates final professional report in Portuguese.
+
+    Args:
+        client: Google GenAI client
+        url: Analyzed URL
+        real_data: Real data extracted from website
+        scores_data: Calculated scores
+        page_audit: Results from Agent 1
+        serp_analysis: Results from Agent 2
+        cro_analysis: Results from Agent 3
+
+    Returns:
+        Markdown formatted professional report
+    """
+    print(f"[AGENT 4] Strategic Advisor - Gerando relatório final...")
+
+    final_prompt = f"""You are a Senior Digital Strategist. Generate a PROFESSIONAL, CONCISE report in Portuguese (pt-BR) for {url}.
 
 CRITICAL RULE: Use ONLY real data provided. NEVER invent numbers, percentages, or data.
 
@@ -473,7 +545,7 @@ Websites são dinâmicos e mudam constantemente. Recomendamos realizar novas an�
 ---
 
 **SiteScore - Auditoria Digital Estratégica**
-*Powered by AI & Real Data Analysis*
+*Relatório Técnico Profissional*
 
 ---
 
@@ -484,45 +556,48 @@ IMPORTANT INSTRUCTIONS:
 - Use ONLY real data provided - never invent metrics
 - Maintain formal business tone throughout"""
 
-        response4 = client.models.generate_content(
-            model='gemini-1.5-flash',
-            contents=final_prompt
-        )
-        final_report = response4.text.strip()
+    response = client.models.generate_content(
+        model=GEMINI_MODEL,
+        contents=final_prompt
+    )
 
-        # Limpar markdown blocks se houver
-        if '```markdown' in final_report:
-            final_report = final_report.split('```markdown')[1].split('```')[0].strip()
-        elif final_report.startswith('```') and final_report.endswith('```'):
-            final_report = final_report[3:-3].strip()
+    final_report = response.text.strip()
 
-        print(f"[AGENT 4] ✓ Concluído - Relatório gerado ({len(final_report)} caracteres)")
-        print(f"[SUCCESS] Análise completa finalizada!")
+    if '```markdown' in final_report:
+        final_report = final_report.split('```markdown')[1].split('```')[0].strip()
+    elif final_report.startswith('```') and final_report.endswith('```'):
+        final_report = final_report[3:-3].strip()
 
-        return jsonify({'output': final_report})
+    print(f"[AGENT 4] ✓ Concluído - Relatório gerado ({len(final_report)} caracteres)")
+    return final_report
 
-    except json.JSONDecodeError as e:
-        error_msg = f'Erro ao processar JSON dos agentes: {str(e)}'
-        print(f"[ERROR] {error_msg}")
-        return jsonify({'error': error_msg}), 500
 
-    except ImportError as e:
-        error_msg = f'Erro ao importar google.genai: {str(e)}'
-        print(f"[ERROR] {error_msg}")
-        return jsonify({'error': 'Módulo google-genai não disponível'}), 500
+def _extract_json_from_response(text: str) -> str:
+    """
+    Extract JSON content from AI response, removing markdown code blocks.
 
-    except Exception as e:
-        import traceback
-        error_trace = traceback.format_exc()
-        print(f"[ERROR] Exception: {error_trace}")
-        return jsonify({
-            'error': f'Erro interno: {str(e)}',
-            'details': error_trace if app.debug else None
-        }), 500
+    Args:
+        text: Raw response text from AI model
+
+    Returns:
+        Clean JSON string
+    """
+    if '```json' in text:
+        return text.split('```json')[1].split('```')[0].strip()
+    elif '```' in text:
+        return text.split('```')[1].split('```')[0].strip()
+    return text
+
 
 @app.route('/generate-pdf', methods=['POST'])
-def generate_pdf():
-    """Gera PDF do relatório Markdown"""
+def generate_pdf() -> Tuple[Dict, int]:
+    """
+    Generate PDF from markdown report.
+    Currently disabled due to WeasyPrint system dependencies.
+
+    Returns:
+        PDF file or error message
+    """
     try:
         data = request.get_json()
         markdown_text = data.get('markdown', '')
@@ -533,17 +608,12 @@ def generate_pdf():
 
         print(f"[INFO] Gerando PDF para URL: {url_analisada}")
 
-        # Import do gerador de PDF
         from pdf_generator import markdown_to_pdf
 
-        # Gera o PDF
         pdf_bytes = markdown_to_pdf(markdown_text, url_analisada)
-
-        # Cria um objeto BytesIO para enviar o PDF
         pdf_io = io.BytesIO(pdf_bytes)
         pdf_io.seek(0)
 
-        # Define nome do arquivo
         safe_url = url_analisada.replace('https://', '').replace('http://', '').replace('/', '_')[:50]
         filename = f'relatorio_seo_{safe_url}.pdf'
 
@@ -573,16 +643,15 @@ def generate_pdf():
             'details': error_trace if app.debug else None
         }), 500
 
+
 if __name__ == '__main__':
-    # Verificar se a API key está configurada
     if not os.getenv('GOOGLE_API_KEY'):
         print("[WARNING] GOOGLE_API_KEY não encontrada no ambiente!")
         print("[WARNING] Configure no arquivo .env ou como variável de ambiente")
     else:
         print("[INFO] GOOGLE_API_KEY detectada")
 
-    # Detectar ambiente (produção ou desenvolvimento)
-    port = int(os.getenv('PORT', 8000))
+    port = int(os.getenv('PORT', DEFAULT_PORT))
     is_production = os.getenv('FLASK_ENV') == 'production' or os.getenv('RENDER') is not None
     debug_mode = not is_production
 
