@@ -42,8 +42,8 @@ class WebScraper:
             self.load_time = time.time() - start_time
             self.response.raise_for_status()
 
-            # Parse HTML
-            self.soup = BeautifulSoup(self.response.content, 'lxml')
+            # Parse HTML (usando html.parser nativo do Python)
+            self.soup = BeautifulSoup(self.response.content, 'html.parser')
 
             print(f"[SCRAPER] ✓ Página baixada ({self.load_time:.2f}s, {len(self.response.content)} bytes)")
             return True

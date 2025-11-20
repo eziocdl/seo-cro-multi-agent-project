@@ -1,15 +1,12 @@
 #!/usr/bin/env bash
-# exit on error
 set -o errexit
 
-echo "🔧 Iniciando build do Render..."
+echo "🔧 Iniciando build..."
 
-# Atualizar pip
-echo "📦 Atualizando pip..."
+# Atualizar pip para versão mais recente
 pip install --upgrade pip
 
-# Instalar dependências Python
-echo "📥 Instalando dependências Python..."
-pip install -r requirements.txt
+# Instalar dependências (apenas wheels pré-compilados)
+pip install --no-cache-dir -r requirements.txt
 
-echo "✅ Build concluído com sucesso!"
+echo "✅ Build concluído!"
