@@ -130,7 +130,7 @@ Return ONLY a JSON object:
 IMPORTANT: Use ONLY the real data provided. DO NOT simulate or invent data."""
 
         response1 = client.models.generate_content(
-            model='gemini-2.0-flash-exp',
+            model='gemini-1.5-flash',
             contents=page_audit_prompt
         )
         page_audit_text = response1.text.strip()
@@ -165,7 +165,7 @@ Return ONLY a JSON object:
 }}"""
 
         response2 = client.models.generate_content(
-            model='gemini-2.0-flash-exp',
+            model='gemini-1.5-flash',
             contents=serp_prompt
         )
         serp_text = response2.text.strip()
@@ -222,7 +222,7 @@ Return ONLY a JSON object:
 IMPORTANT: Base your analysis ONLY on the real data provided. If mobile-friendly is false, that's a HIGH severity issue. If load time > 3s, that's a problem. Be specific and reference real numbers."""
 
         response3 = client.models.generate_content(
-            model='gemini-2.0-flash-exp',
+            model='gemini-1.5-flash',
             contents=cro_prompt
         )
         cro_text = response3.text.strip()
@@ -485,7 +485,7 @@ IMPORTANT INSTRUCTIONS:
 - Maintain formal business tone throughout"""
 
         response4 = client.models.generate_content(
-            model='gemini-2.0-flash-exp',
+            model='gemini-1.5-flash',
             contents=final_prompt
         )
         final_report = response4.text.strip()
