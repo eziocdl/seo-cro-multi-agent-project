@@ -3,10 +3,11 @@ services:
     name: ai-seo-audit-team
     runtime: python
     buildCommand: ./render-build.sh
-    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --timeout 180 --workers 2
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --timeout 180 --workers 1 --threads 2 --worker-class gthread --log-level info
     envVars:
       - key: GOOGLE_API_KEY
         sync: false
       - key: PYTHON_VERSION
         value: 3.11.0
     autoDeploy: true
+    healthCheckPath: /health
