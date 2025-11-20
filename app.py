@@ -557,11 +557,12 @@ def generate_pdf():
         )
 
     except ImportError as e:
-        print(f"[ERROR] Erro ao importar pdf_generator: {e}")
+        print(f"[WARNING] Geração de PDF desabilitada (WeasyPrint não instalado): {e}")
         return jsonify({
-            'error': 'Módulo de geração de PDF não disponível',
-            'details': str(e)
-        }), 500
+            'error': 'Geração de PDF temporariamente desabilitada',
+            'message': 'Use o botão "Copiar Markdown" para salvar o relatório. A geração de PDF será habilitada em breve.',
+            'details': 'WeasyPrint requer dependências de sistema adicionais'
+        }), 503
 
     except Exception as e:
         import traceback

@@ -9,10 +9,10 @@ lxml==5.1.0
 requests==2.31.0
 gunicorn==21.2.0
 
-# WeasyPrint e dependências para geração de PDF
-cffi==1.16.0
-cairocffi==1.6.1
-weasyprint==60.1
+# PDF generation - desabilitado temporariamente para deploy
+# weasyprint==60.1
+# cffi==1.16.0
+# cairocffi==1.6.1
 
 
 
