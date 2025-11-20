@@ -4,7 +4,7 @@ import os
 from google.adk.agents import LlmAgent, SequentialAgent
 
 # Importa todos os schemas Pydantic (INCLUI CROAnalysis)
-from .schemas import PageAuditOutput, SerpAnalysis, CROAnalysis 
+from schemas import PageAuditOutput, SerpAnalysis, CROAnalysis # <-- MUDANÇA AQUI
 
 
 # --- 1. Definição dos Agentes Sequenciais (Pipeline) ---
@@ -88,7 +88,7 @@ STEP 3: Return ONLY the Markdown content (no JSON, no preamble).""",
 # --- Orquestração do Workflow (SequentialAgent) ---
 seo_cro_audit_team = SequentialAgent(
     name="SEOCROAuditTeam",
-    description="Pipeline de quatro agentes para Auditoria Estratégica Digital: SEO On-Page → Análise SERP → Análise CRO/UX → Relatório Estratégico Consolidado.",
+    description="Pipeline de quatro agentes para Auditoria EstratégICA Digital: SEO On-Page → Análise SERP → Análise CRO/UX → Relatório Estratégico Consolidado.",
     sub_agents=[
         page_auditor_agent,
         serp_analyst_agent,

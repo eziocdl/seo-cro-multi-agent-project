@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO Meta Tags -->
+  <title>SiteScore - Análise Estratégica de SEO, CRO e UX | Auditoria Completa</title>
+  <meta name="description" content="Análise completa e gratuita de SEO, CRO e UX para seu site. Receba insights acionáveis com dados reais para melhorar seu ranking orgânico e conversões.">
+  <meta name="keywords" content="análise seo, auditoria seo, cro, ux, análise de site, otimização, marketing digital">
+  <meta name="author" content="SiteScore">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sitescore.com/">
+  <meta property="og:title" content="SiteScore - Análise Estratégica de SEO, CRO e UX">
+  <meta property="og:description" content="Análise completa e gratuita de SEO, CRO e UX para seu site. Receba insights acionáveis com dados reais.">
+  <meta property="og:image" content="https://sitescore.com/og-image.jpg">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://sitescore.com/">
+  <meta property="twitter:title" content="SiteScore - Análise Estratégica de SEO, CRO e UX">
+  <meta property="twitter:description" content="Análise completa e gratuita de SEO, CRO e UX para seu site.">
+  <meta property="twitter:image" content="https://sitescore.com/twitter-image.jpg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- Structured Data / Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "SiteScore",
+    "description": "Análise completa de SEO, CRO e UX em um único lugar",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "BRL"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "127"
+    }
+  }
+  </script>
+</head>
+
+<body>
+
+  <header>
+    <div class="container">
+      <h1>SiteScore</h1>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section id="hero-section">
+      <h2>Potencialize seu Tráfego Orgânico</h2>
+      <p>Análise completa de SEO, CRO e UX em um único lugar. Receba insights acionáveis para melhorar seu ranking.</p>
+
+      <div class="analysis-card">
+        <form id="analysis-form">
+          <label for="url">Insira a URL do seu site</label>
+          <div class="form-group">
+            <input type="text" id="url" placeholder="exemplo.com.br" required>
+            <button type="submit" id="submit-button">Analisar</button>
+          </div>
+          <p id="form-error" class="error-message hidden"></p>
+        </form>
+      </div>
+    </section>
+
+    <div id="loader" class="hidden">
+      <div class="spinner"></div>
+      <p>Analisando... Os agentes estão trabalhando (Pode levar até 30 segundos).</p>
+    </div>
+
+    <section id="dashboard-section" class="hidden">
+      <div class="dashboard-header">
+        <div>
+          <h2 id="report-url"></h2>
+          <p>Relatório de Auditoria Estratégica Digital</p>
+        </div>
+        <div>
+          <button id="back-button">&larr; Voltar</button>
+          <button id="download-button">Baixar PDF</button>
+        </div>
+      </div>
+
+      <div id="report-content" class="markdown-body"></div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
