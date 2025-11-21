@@ -23,7 +23,7 @@
   <meta property="twitter:description" content="Análise 360° do seu site. SEO + CRO + GEO em um único lugar.">
 
   <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23667eea'><path d='M12 2L4 10l1.41 1.41L11 5.83V22h2V5.83l5.59 5.58L20 10l-8-8z'/><circle cx='12' cy='19' r='2'/></svg>">
 
   <!-- Preconnect -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
@@ -60,7 +60,16 @@
   <header>
     <div class="container">
       <div class="logo">
-        <span class="logo-icon">🚀</span>
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L4 10L5.41 11.41L11 5.83V22H13V5.83L18.59 11.41L20 10L12 2Z" fill="url(#logo-gradient)"/>
+          <circle cx="12" cy="19" r="2" fill="url(#logo-gradient)"/>
+          <defs>
+            <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#667eea"/>
+              <stop offset="100%" style="stop-color:#764ba2"/>
+            </linearGradient>
+          </defs>
+        </svg>
         <span class="logo-text">Growth Engine</span>
       </div>
       <nav class="header-nav">
@@ -102,7 +111,10 @@
             <label for="url">Digite a URL do seu site</label>
             <div class="form-group">
               <div class="input-wrapper">
-                <span class="input-icon">🔗</span>
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                </svg>
                 <input type="text" id="url" placeholder="exemplo.com.br" required>
               </div>
               <button type="submit" id="submit-button" class="cta-button">
@@ -110,7 +122,12 @@
                 <span class="button-arrow">→</span>
               </button>
             </div>
-            <p class="input-hint">✨ Análise completa em menos de 30 segundos</p>
+            <p class="input-hint">
+              <svg style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+              </svg>
+              Análise completa em menos de 30 segundos
+            </p>
             <p id="form-error" class="error-message hidden"></p>
           </form>
         </div>
@@ -118,15 +135,21 @@
         <!-- Trust Badges -->
         <div class="trust-badges">
           <div class="badge-item">
-            <span class="badge-icon">✓</span>
+            <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
             <span>100% Grátis</span>
           </div>
           <div class="badge-item">
-            <span class="badge-icon">✓</span>
+            <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
             <span>Sem Cadastro</span>
           </div>
           <div class="badge-item">
-            <span class="badge-icon">✓</span>
+            <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
             <span>Dados Reais</span>
           </div>
         </div>
@@ -145,21 +168,34 @@
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-number">01</div>
-          <div class="step-icon">🔍</div>
+          <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
           <h3>Análise Profunda</h3>
           <p>Escaneamos seu site coletando dados reais de SEO técnico, performance, conteúdo e experiência do usuário.</p>
         </div>
 
         <div class="step-card">
           <div class="step-number">02</div>
-          <div class="step-icon">🤖</div>
+          <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+            <circle cx="12" cy="5" r="2"></circle>
+            <path d="M12 7v4"></path>
+            <line x1="8" y1="16" x2="8" y2="16"></line>
+            <line x1="16" y1="16" x2="16" y2="16"></line>
+          </svg>
           <h3>Inteligência Artificial</h3>
           <p>4 agentes especializados analisam competitividade, oportunidades de otimização e preparação para IA.</p>
         </div>
 
         <div class="step-card">
           <div class="step-number">03</div>
-          <div class="step-icon">📊</div>
+          <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
           <h3>Relatório Estratégico</h3>
           <p>Receba um plano de ação priorizado com recomendações técnicas e impacto esperado no negócio.</p>
         </div>
@@ -263,7 +299,13 @@
           <span>Gerando relatório estratégico</span>
         </div>
       </div>
-      <p class="loader-time">⏱️ Tempo estimado: 20-30 segundos</p>
+      <p class="loader-time">
+        <svg style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        Tempo estimado: 20-30 segundos
+      </p>
     </div>
   </div>
 
@@ -298,7 +340,13 @@
   <!-- Footer -->
   <footer class="site-footer">
     <div class="container">
-      <p>🚀 <strong>Growth Engine</strong> - Análise profissional de SEO, CRO e GEO</p>
+      <p>
+        <svg style="width: 20px; height: 20px; display: inline-block; vertical-align: middle; margin-right: 8px;" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2L4 10L5.41 11.41L11 5.83V22H13V5.83L18.59 11.41L20 10L12 2Z"/>
+          <circle cx="12" cy="19" r="2"/>
+        </svg>
+        <strong>Growth Engine</strong> - Análise profissional de SEO, CRO e GEO
+      </p>
       <p class="footer-small">Relatórios gerados por IA com dados reais • 100% Gratuito</p>
     </div>
   </footer>
