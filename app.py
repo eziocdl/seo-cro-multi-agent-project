@@ -11,7 +11,44 @@ load_dotenv()
 
 print("[STARTUP] Initializing Flask app...", flush=True)
 app = Flask(__name__, static_folder='public', static_url_path='')
-CORS(app)
+
+# CORS configuration
+CORS(app, resources={
+    r"/*": {
+        "origins": "*",
+        "methods": ["GET", "POST"],
+        "allow_headers": ["Content-Type"]
+    }
+})
+
+# Security headers middleware
+@app.after_request
+def set_security_headers(response):
+    """Add security headers to all responses"""
+    # Prevent clickjacking
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+
+    # Enable XSS protection
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+
+    # Content Security Policy
+    response.headers['Content-Security-Policy'] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com; "
+        "img-src 'self' data: https:; "
+        "connect-src 'self'"
+    )
+
+    # Referrer policy
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+
+    # Permissions policy
+    response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
+
+    return response
+
 print("[STARTUP] Flask app initialized successfully", flush=True)
 
 GEMINI_MODEL = 'gemini-2.5-flash'  # Updated: using 2.5 Flash (best for free tier)

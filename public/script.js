@@ -28,6 +28,45 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentUrl = "";
 
   /**
+   * Sanitize HTML to prevent XSS attacks
+   * Removes dangerous tags and attributes
+   */
+  function sanitizeHTML(html) {
+    const temp = document.createElement('div');
+    temp.textContent = html;
+    const text = temp.innerHTML;
+
+    // Create a safe HTML by parsing and rebuilding
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // Remove all script tags
+    const scripts = doc.querySelectorAll('script');
+    scripts.forEach(script => script.remove());
+
+    // Remove dangerous attributes
+    const allElements = doc.querySelectorAll('*');
+    allElements.forEach(element => {
+      // Remove event handlers
+      Array.from(element.attributes).forEach(attr => {
+        if (attr.name.startsWith('on')) {
+          element.removeAttribute(attr.name);
+        }
+      });
+
+      // Remove javascript: in href/src
+      ['href', 'src', 'action', 'formaction'].forEach(attr => {
+        const value = element.getAttribute(attr);
+        if (value && value.trim().toLowerCase().startsWith('javascript:')) {
+          element.removeAttribute(attr);
+        }
+      });
+    });
+
+    return doc.body.innerHTML;
+  }
+
+  /**
    * Show specific view and hide others
    */
   function showView(view) {
@@ -135,7 +174,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Store report and display
       currentMarkdownReport = result.output;
-      reportContent.innerHTML = marked.parse(currentMarkdownReport);
+
+      // Security: Configure marked with secure options
+      marked.setOptions({
+        headerIds: false,
+        mangle: false
+      });
+
+      // Parse markdown with XSS protection
+      const htmlContent = marked.parse(currentMarkdownReport);
+
+      // Sanitize HTML before inserting (remove dangerous tags/attributes)
+      const sanitizedHTML = sanitizeHTML(htmlContent);
+      reportContent.innerHTML = sanitizedHTML;
       reportUrl.textContent = currentUrl;
 
       console.log("[INFO] Relatório renderizado com sucesso");
