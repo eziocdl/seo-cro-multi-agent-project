@@ -14,13 +14,13 @@ app = Flask(__name__, static_folder='public', static_url_path='')
 CORS(app)
 print("[STARTUP] Flask app initialized successfully", flush=True)
 
-GEMINI_MODEL = 'gemini-1.5-flash'
+GEMINI_MODEL = 'gemini-2.5-flash'  # Updated: using 2.5 Flash (best for free tier)
 DEFAULT_PORT = 8000
 REQUEST_TIMEOUT = 180
 GUNICORN_WORKERS = 1
 GUNICORN_THREADS = 2
 
-API_VERSION = '1.0.0'
+API_VERSION = '1.0.1'
 SERVICE_NAME = 'AI SEO Audit Team API'
 
 
