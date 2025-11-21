@@ -1,15 +1,18 @@
 import os
 import io
 import json
-from typing import Dict, Tuple, Optional
+from typing import Dict, Tuple
 from flask import Flask, request, jsonify, send_from_directory, send_file
 from flask_cors import CORS
 from dotenv import load_dotenv
 
+print("[STARTUP] Loading environment variables...", flush=True)
 load_dotenv()
 
+print("[STARTUP] Initializing Flask app...", flush=True)
 app = Flask(__name__, static_folder='public', static_url_path='')
 CORS(app)
+print("[STARTUP] Flask app initialized successfully", flush=True)
 
 GEMINI_MODEL = 'gemini-1.5-flash'
 DEFAULT_PORT = 8000
@@ -24,11 +27,38 @@ SERVICE_NAME = 'AI SEO Audit Team API'
 @app.route('/health', methods=['GET'])
 def health_check() -> Tuple[Dict, int]:
     """Health check endpoint for monitoring service status."""
+    print("[HEALTH] Health check endpoint called")
     return jsonify({
         'status': 'healthy',
         'service': SERVICE_NAME,
         'version': API_VERSION
     }), 200
+
+
+@app.route('/readiness', methods=['GET'])
+def readiness_check() -> Tuple[Dict, int]:
+    """Readiness check - verifies if app can handle requests."""
+    try:
+        # Quick check without loading heavy dependencies
+        api_key = os.getenv('GOOGLE_API_KEY')
+        if not api_key:
+            return jsonify({
+                'status': 'not_ready',
+                'reason': 'GOOGLE_API_KEY not configured'
+            }), 503
+
+        print("[READINESS] Readiness check passed")
+        return jsonify({
+            'status': 'ready',
+            'service': SERVICE_NAME,
+            'version': API_VERSION
+        }), 200
+    except Exception as e:
+        print(f"[READINESS ERROR] {str(e)}")
+        return jsonify({
+            'status': 'not_ready',
+            'reason': str(e)
+        }), 503
 
 
 @app.route('/')
@@ -642,6 +672,29 @@ def generate_pdf() -> Tuple[Dict, int]:
             'error': f'Erro ao gerar PDF: {str(e)}',
             'details': error_trace if app.debug else None
         }), 500
+
+
+# Pre-load heavy dependencies when using gunicorn --preload
+# This speeds up worker startup significantly
+def preload_dependencies():
+    """Preload heavy libraries to speed up request handling."""
+    try:
+        print("[PRELOAD] Loading google.genai...", flush=True)
+        from google import genai  # noqa: F401 - intentional preload
+        print("[PRELOAD] google.genai loaded successfully", flush=True)
+
+        print("[PRELOAD] Loading web scraper dependencies...", flush=True)
+        from web_scraper import scrape_url  # noqa: F401 - intentional preload
+        from scoring_system import calculate_scores  # noqa: F401 - intentional preload
+        print("[PRELOAD] All dependencies loaded successfully", flush=True)
+    except Exception as e:
+        print(f"[PRELOAD WARNING] Could not preload dependencies: {e}", flush=True)
+
+
+# Run preload in production (when using gunicorn)
+if os.getenv('RENDER') or os.getenv('FLASK_ENV') == 'production':
+    print("[STARTUP] Production environment detected - preloading dependencies...", flush=True)
+    preload_dependencies()
 
 
 if __name__ == '__main__':
