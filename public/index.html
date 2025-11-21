@@ -1,59 +1,54 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- SEO Meta Tags -->
-  <title>SiteScore - Análise Estratégica de SEO, CRO e UX | Auditoria Completa</title>
-  <meta name="description" content="Análise completa e gratuita de SEO, CRO e UX para seu site. Receba insights acionáveis com dados reais para melhorar seu ranking orgânico e conversões.">
-  <meta name="keywords" content="análise seo, auditoria seo, cro, ux, análise de site, otimização, marketing digital">
-  <meta name="author" content="SiteScore">
+  <title>Growth Engine - Análise Completa de SEO, CRO e GEO | Turbine seu Tráfego</title>
+  <meta name="description" content="Plataforma completa de análise digital: SEO, CRO e GEO em um só lugar. Receba insights acionáveis e um plano estratégico para aumentar seu tráfego orgânico e conversões.">
+  <meta name="keywords" content="growth engine, análise seo, auditoria digital, cro, geo, otimização de conversão, marketing digital, tráfego orgânico">
+  <meta name="author" content="Growth Engine">
   <meta name="robots" content="index, follow">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://sitescore.com/">
-  <meta property="og:title" content="SiteScore - Análise Estratégica de SEO, CRO e UX">
-  <meta property="og:description" content="Análise completa e gratuita de SEO, CRO e UX para seu site. Receba insights acionáveis com dados reais.">
-  <meta property="og:image" content="https://sitescore.com/og-image.jpg">
+  <meta property="og:title" content="Growth Engine - Análise Completa de SEO, CRO e GEO">
+  <meta property="og:description" content="Plataforma completa de análise digital. SEO + CRO + GEO = Crescimento Acelerado">
+  <meta property="og:image" content="https://growth-engine.app/og-image.jpg">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://sitescore.com/">
-  <meta property="twitter:title" content="SiteScore - Análise Estratégica de SEO, CRO e UX">
-  <meta property="twitter:description" content="Análise completa e gratuita de SEO, CRO e UX para seu site.">
-  <meta property="twitter:image" content="https://sitescore.com/twitter-image.jpg">
+  <meta property="twitter:title" content="Growth Engine - Motor de Crescimento Digital">
+  <meta property="twitter:description" content="Análise 360° do seu site. SEO + CRO + GEO em um único lugar.">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
 
-  <!-- Preconnect for performance -->
+  <!-- Preconnect -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-  <!-- Structured Data / Schema.org -->
+  <!-- Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "SiteScore",
-    "description": "Análise completa de SEO, CRO e UX em um único lugar",
+    "name": "Growth Engine",
+    "description": "Análise completa de SEO, CRO e GEO para acelerar o crescimento digital",
     "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
     "offers": {
       "@type": "Offer",
       "price": "0",
       "priceCurrency": "BRL"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "ratingCount": "127"
     }
   }
   </script>
@@ -61,53 +56,253 @@
 
 <body>
 
+  <!-- Header -->
   <header>
     <div class="container">
-      <h1>SiteScore</h1>
+      <div class="logo">
+        <span class="logo-icon">🚀</span>
+        <span class="logo-text">Growth Engine</span>
+      </div>
+      <nav class="header-nav">
+        <a href="#como-funciona">Como Funciona</a>
+        <a href="#features">Features</a>
+      </nav>
     </div>
   </header>
 
-  <main class="container">
-
-    <section id="hero-section">
-      <h2>Potencialize seu Tráfego Orgânico</h2>
-      <p>Análise completa de SEO, CRO e UX em um único lugar. Receba insights acionáveis para melhorar seu ranking.</p>
-
-      <div class="analysis-card">
-        <form id="analysis-form">
-          <label for="url">Insira a URL do seu site</label>
-          <div class="form-group">
-            <input type="text" id="url" placeholder="exemplo.com.br" required>
-            <button type="submit" id="submit-button">Analisar</button>
-          </div>
-          <p id="form-error" class="error-message hidden"></p>
-        </form>
-      </div>
-    </section>
-
-    <div id="loader" class="hidden">
-      <div class="spinner"></div>
-      <p>Analisando... Os agentes estão trabalhando (Pode levar até 30 segundos).</p>
+  <!-- Hero Banner -->
+  <section id="hero-banner">
+    <div class="hero-background">
+      <div class="gradient-blob blob-1"></div>
+      <div class="gradient-blob blob-2"></div>
+      <div class="gradient-blob blob-3"></div>
     </div>
 
-    <section id="dashboard-section" class="hidden">
+    <div class="container hero-container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          Motor de Crescimento Digital
+        </div>
+
+        <h1 class="hero-title">
+          Turbine seu <span class="gradient-text">Tráfego Orgânico</span> e
+          <span class="gradient-text">Conversões</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Análise 360° do seu site em <strong>SEO</strong>, <strong>CRO</strong> e <strong>GEO</strong>.
+          Receba um relatório profissional com insights acionáveis e um plano estratégico
+          para crescer seu negócio online.
+        </p>
+
+        <!-- Analysis Card -->
+        <div class="analysis-card">
+          <form id="analysis-form">
+            <label for="url">Digite a URL do seu site</label>
+            <div class="form-group">
+              <div class="input-wrapper">
+                <span class="input-icon">🔗</span>
+                <input type="text" id="url" placeholder="exemplo.com.br" required>
+              </div>
+              <button type="submit" id="submit-button" class="cta-button">
+                <span>Analisar Grátis</span>
+                <span class="button-arrow">→</span>
+              </button>
+            </div>
+            <p class="input-hint">✨ Análise completa em menos de 30 segundos</p>
+            <p id="form-error" class="error-message hidden"></p>
+          </form>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="trust-badges">
+          <div class="badge-item">
+            <span class="badge-icon">✓</span>
+            <span>100% Grátis</span>
+          </div>
+          <div class="badge-item">
+            <span class="badge-icon">✓</span>
+            <span>Sem Cadastro</span>
+          </div>
+          <div class="badge-item">
+            <span class="badge-icon">✓</span>
+            <span>Dados Reais</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section id="como-funciona" class="section-light">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Como Funciona</h2>
+        <p class="section-subtitle">Metodologia profissional em 3 etapas simples</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <div class="step-icon">🔍</div>
+          <h3>Análise Profunda</h3>
+          <p>Escaneamos seu site coletando dados reais de SEO técnico, performance, conteúdo e experiência do usuário.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <div class="step-icon">🤖</div>
+          <h3>Inteligência Artificial</h3>
+          <p>4 agentes especializados analisam competitividade, oportunidades de otimização e preparação para IA.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <div class="step-icon">📊</div>
+          <h3>Relatório Estratégico</h3>
+          <p>Receba um plano de ação priorizado com recomendações técnicas e impacto esperado no negócio.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="section-dark">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">O Que Analisamos</h2>
+        <p class="section-subtitle">Triângulo do Crescimento Digital</p>
+      </div>
+
+      <div class="features-grid">
+        <!-- SEO Feature -->
+        <div class="feature-card">
+          <div class="feature-icon seo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+          </div>
+          <h3>SEO - Search Engine Optimization</h3>
+          <ul class="feature-list">
+            <li>✓ On-Page SEO (títulos, meta descriptions, headings)</li>
+            <li>✓ SEO Técnico (SSL, mobile-friendly, velocidade)</li>
+            <li>✓ Qualidade do Conteúdo e palavras-chave</li>
+            <li>✓ Structured Data e rich snippets</li>
+            <li>✓ Link building (internos e externos)</li>
+          </ul>
+          <div class="feature-score">Score até 100 pontos</div>
+        </div>
+
+        <!-- CRO Feature -->
+        <div class="feature-card">
+          <div class="feature-icon cro-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          </div>
+          <h3>CRO - Conversion Rate Optimization</h3>
+          <ul class="feature-list">
+            <li>✓ Efetividade de CTAs e formulários</li>
+            <li>✓ Experiência da página e usabilidade</li>
+            <li>✓ Otimização mobile e responsividade</li>
+            <li>✓ Elementos de confiança e credibilidade</li>
+            <li>✓ Barreiras de conversão identificadas</li>
+          </ul>
+          <div class="feature-score">Score até 100 pontos</div>
+        </div>
+
+        <!-- GEO Feature -->
+        <div class="feature-card">
+          <div class="feature-icon geo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+          </div>
+          <h3>GEO - Generative Engine Optimization</h3>
+          <ul class="feature-list">
+            <li>✓ Preparação para ChatGPT e Gemini</li>
+            <li>✓ Otimização para busca por voz</li>
+            <li>✓ Schema markup e dados estruturados</li>
+            <li>✓ Conteúdo otimizado para IA</li>
+            <li>✓ Visibilidade em respostas generativas</li>
+          </ul>
+          <div class="feature-score">Score até 100 pontos</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Loader -->
+  <div id="loader" class="hidden">
+    <div class="loader-content">
+      <div class="spinner-wrapper">
+        <div class="spinner"></div>
+        <div class="spinner-glow"></div>
+      </div>
+      <h3>Análise em Andamento</h3>
+      <p>Nossos agentes especializados estão trabalhando...</p>
+      <div class="loader-steps">
+        <div class="loader-step">
+          <span class="step-dot"></span>
+          <span>Coletando dados do site</span>
+        </div>
+        <div class="loader-step">
+          <span class="step-dot"></span>
+          <span>Analisando SEO e competitividade</span>
+        </div>
+        <div class="loader-step">
+          <span class="step-dot"></span>
+          <span>Avaliando CRO e usabilidade</span>
+        </div>
+        <div class="loader-step">
+          <span class="step-dot"></span>
+          <span>Gerando relatório estratégico</span>
+        </div>
+      </div>
+      <p class="loader-time">⏱️ Tempo estimado: 20-30 segundos</p>
+    </div>
+  </div>
+
+  <!-- Dashboard Section -->
+  <section id="dashboard-section" class="hidden">
+    <div class="container">
       <div class="dashboard-header">
         <div>
           <h2 id="report-url"></h2>
-          <p>Relatório de Auditoria Estratégica Digital</p>
+          <p>Relatório de Auditoria Digital Estratégica</p>
         </div>
-        <div>
-          <button id="back-button">&larr; Voltar</button>
-          <button id="download-button">Baixar PDF</button>
+        <div class="dashboard-actions">
+          <button id="back-button" class="secondary-button">
+            <span>←</span>
+            <span>Nova Análise</span>
+          </button>
+          <button id="download-button" class="primary-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Baixar PDF</span>
+          </button>
         </div>
       </div>
 
       <div id="report-content" class="markdown-body"></div>
-    </section>
+    </div>
+  </section>
 
-  </main>
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>🚀 <strong>Growth Engine</strong> - Análise profissional de SEO, CRO e GEO</p>
+      <p class="footer-small">Relatórios gerados por IA com dados reais • 100% Gratuito</p>
+    </div>
+  </footer>
 
   <script src="script.js"></script>
 </body>
-
 </html>
