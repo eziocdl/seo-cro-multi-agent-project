@@ -61,6 +61,105 @@ def readiness_check() -> Tuple[Dict, int]:
         }), 503
 
 
+@app.route('/diagnostic', methods=['GET'])
+def diagnostic() -> Tuple[Dict, int]:
+    """Complete diagnostic endpoint to check all dependencies."""
+    diagnostics = {
+        'service': SERVICE_NAME,
+        'version': API_VERSION,
+        'timestamp': None,
+        'checks': {}
+    }
+
+    all_ok = True
+
+    # Check 1: Environment variables
+    try:
+        api_key = os.getenv('GOOGLE_API_KEY')
+        diagnostics['checks']['env_vars'] = {
+            'status': 'OK' if api_key else 'FAILED',
+            'google_api_key': 'configured' if api_key else 'MISSING',
+            'render': 'yes' if os.getenv('RENDER') else 'no'
+        }
+        if not api_key:
+            all_ok = False
+    except Exception as e:
+        diagnostics['checks']['env_vars'] = {'status': 'ERROR', 'error': str(e)}
+        all_ok = False
+
+    # Check 2: Google GenAI import
+    try:
+        from google import genai
+        diagnostics['checks']['google_genai'] = {
+            'status': 'OK',
+            'import': 'success'
+        }
+    except Exception as e:
+        diagnostics['checks']['google_genai'] = {
+            'status': 'FAILED',
+            'import': 'failed',
+            'error': str(e)
+        }
+        all_ok = False
+
+    # Check 3: Web scraper
+    try:
+        from web_scraper import scrape_url
+        diagnostics['checks']['web_scraper'] = {
+            'status': 'OK',
+            'import': 'success'
+        }
+    except Exception as e:
+        diagnostics['checks']['web_scraper'] = {
+            'status': 'FAILED',
+            'import': 'failed',
+            'error': str(e)
+        }
+        all_ok = False
+
+    # Check 4: Scoring system
+    try:
+        from scoring_system import calculate_scores
+        diagnostics['checks']['scoring_system'] = {
+            'status': 'OK',
+            'import': 'success'
+        }
+    except Exception as e:
+        diagnostics['checks']['scoring_system'] = {
+            'status': 'FAILED',
+            'import': 'failed',
+            'error': str(e)
+        }
+        all_ok = False
+
+    # Check 5: Try to create GenAI client
+    if diagnostics['checks']['env_vars'].get('google_api_key') == 'configured':
+        try:
+            from google import genai
+            client = genai.Client(api_key=os.getenv('GOOGLE_API_KEY'))
+            diagnostics['checks']['genai_client'] = {
+                'status': 'OK',
+                'client': 'initialized'
+            }
+        except Exception as e:
+            diagnostics['checks']['genai_client'] = {
+                'status': 'FAILED',
+                'error': str(e)
+            }
+            all_ok = False
+    else:
+        diagnostics['checks']['genai_client'] = {
+            'status': 'SKIPPED',
+            'reason': 'API key not configured'
+        }
+        all_ok = False
+
+    diagnostics['overall_status'] = 'HEALTHY' if all_ok else 'UNHEALTHY'
+
+    status_code = 200 if all_ok else 503
+    return jsonify(diagnostics), status_code
+
+
 @app.route('/')
 def index():
     """Serve frontend application."""
@@ -75,28 +174,60 @@ def invoke_agent() -> Tuple[Dict, int]:
     Returns:
         JSON response with markdown report or error message
     """
-    data = request.get_json()
-    url = data.get('message', '')
-
-    if not url:
-        return jsonify({'error': 'URL não fornecida'}), 400
-
-    if not url.startswith('http://') and not url.startswith('https://'):
-        url = 'https://' + url
-
-    print(f"[INFO] Iniciando análise para URL: {url}")
+    print("[INVOKE] Endpoint /invoke chamado", flush=True)
 
     try:
-        from google import genai
-        from web_scraper import scrape_url
-        from scoring_system import calculate_scores
+        data = request.get_json()
+        if not data:
+            print("[INVOKE ERROR] Nenhum JSON recebido", flush=True)
+            return jsonify({'error': 'Nenhum dado JSON recebido'}), 400
 
+        url = data.get('message', '')
+        print(f"[INVOKE] URL recebida: {url}", flush=True)
+
+        if not url:
+            print("[INVOKE ERROR] URL vazia", flush=True)
+            return jsonify({'error': 'URL não fornecida'}), 400
+
+        if not url.startswith('http://') and not url.startswith('https://'):
+            url = 'https://' + url
+            print(f"[INVOKE] URL ajustada para: {url}", flush=True)
+
+        print(f"[INVOKE] Iniciando análise para URL: {url}", flush=True)
+
+        # Check API key first
         api_key = os.getenv('GOOGLE_API_KEY')
         if not api_key:
-            return jsonify({'error': 'GOOGLE_API_KEY não configurada'}), 500
+            print("[INVOKE ERROR] GOOGLE_API_KEY não configurada", flush=True)
+            return jsonify({'error': 'GOOGLE_API_KEY não configurada no servidor'}), 500
 
-        client = genai.Client(api_key=api_key)
-        print(f"[DEBUG] Executando pipeline de 4 agentes com DADOS REAIS...")
+        print("[INVOKE] API key encontrada, importando dependências...", flush=True)
+
+        # Import dependencies with error handling
+        try:
+            from google import genai
+            print("[INVOKE] google.genai importado com sucesso", flush=True)
+        except ImportError as e:
+            print(f"[INVOKE ERROR] Erro ao importar google.genai: {e}", flush=True)
+            return jsonify({'error': f'Erro ao importar google.genai: {str(e)}'}), 500
+
+        try:
+            from web_scraper import scrape_url
+            from scoring_system import calculate_scores
+            print("[INVOKE] web_scraper e scoring_system importados com sucesso", flush=True)
+        except ImportError as e:
+            print(f"[INVOKE ERROR] Erro ao importar módulos locais: {e}", flush=True)
+            return jsonify({'error': f'Erro ao importar módulos: {str(e)}'}), 500
+
+        # Create client
+        try:
+            client = genai.Client(api_key=api_key)
+            print("[INVOKE] Cliente GenAI criado com sucesso", flush=True)
+        except Exception as e:
+            print(f"[INVOKE ERROR] Erro ao criar cliente GenAI: {e}", flush=True)
+            return jsonify({'error': f'Erro ao conectar com Google GenAI: {str(e)}'}), 500
+
+        print(f"[INVOKE] Executando pipeline de 4 agentes com DADOS REAIS...", flush=True)
 
         real_data = scrape_url(url)
         if not real_data.get('success'):
