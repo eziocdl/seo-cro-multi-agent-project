@@ -12,7 +12,6 @@ load_dotenv()
 print("[STARTUP] Initializing Flask app...", flush=True)
 app = Flask(__name__, static_folder='public', static_url_path='')
 
-# CORS configuration
 CORS(app, resources={
     r"/*": {
         "origins": "*",
@@ -21,17 +20,10 @@ CORS(app, resources={
     }
 })
 
-# Security headers middleware
 @app.after_request
 def set_security_headers(response):
-    """Add security headers to all responses"""
-    # Prevent clickjacking
     response.headers['X-Frame-Options'] = 'SAMEORIGIN'
-
-    # Enable XSS protection
     response.headers['X-Content-Type-Options'] = 'nosniff'
-
-    # Content Security Policy
     response.headers['Content-Security-Policy'] = (
         "default-src 'self'; "
         "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
@@ -40,18 +32,13 @@ def set_security_headers(response):
         "img-src 'self' data: https:; "
         "connect-src 'self'"
     )
-
-    # Referrer policy
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
-
-    # Permissions policy
     response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
-
     return response
 
 print("[STARTUP] Flask app initialized successfully", flush=True)
 
-GEMINI_MODEL = 'gemini-2.5-flash'  # Updated: using 2.5 Flash (best for free tier)
+GEMINI_MODEL = 'gemini-2.5-flash'
 DEFAULT_PORT = 8000
 REQUEST_TIMEOUT = 180
 GUNICORN_WORKERS = 1
@@ -63,7 +50,6 @@ SERVICE_NAME = 'AI SEO Audit Team API'
 
 @app.route('/health', methods=['GET'])
 def health_check() -> Tuple[Dict, int]:
-    """Health check endpoint for monitoring service status."""
     print("[HEALTH] Health check endpoint called")
     return jsonify({
         'status': 'healthy',
@@ -74,9 +60,7 @@ def health_check() -> Tuple[Dict, int]:
 
 @app.route('/readiness', methods=['GET'])
 def readiness_check() -> Tuple[Dict, int]:
-    """Readiness check - verifies if app can handle requests."""
     try:
-        # Quick check without loading heavy dependencies
         api_key = os.getenv('GOOGLE_API_KEY')
         if not api_key:
             return jsonify({
@@ -100,7 +84,6 @@ def readiness_check() -> Tuple[Dict, int]:
 
 @app.route('/diagnostic', methods=['GET'])
 def diagnostic() -> Tuple[Dict, int]:
-    """Complete diagnostic endpoint to check all dependencies."""
     diagnostics = {
         'service': SERVICE_NAME,
         'version': API_VERSION,
@@ -110,7 +93,6 @@ def diagnostic() -> Tuple[Dict, int]:
 
     all_ok = True
 
-    # Check 1: Environment variables
     try:
         api_key = os.getenv('GOOGLE_API_KEY')
         diagnostics['checks']['env_vars'] = {
@@ -124,7 +106,6 @@ def diagnostic() -> Tuple[Dict, int]:
         diagnostics['checks']['env_vars'] = {'status': 'ERROR', 'error': str(e)}
         all_ok = False
 
-    # Check 2: Google GenAI import
     try:
         from google import genai
         diagnostics['checks']['google_genai'] = {
@@ -139,7 +120,6 @@ def diagnostic() -> Tuple[Dict, int]:
         }
         all_ok = False
 
-    # Check 3: Web scraper
     try:
         from web_scraper import scrape_url
         diagnostics['checks']['web_scraper'] = {
@@ -154,7 +134,6 @@ def diagnostic() -> Tuple[Dict, int]:
         }
         all_ok = False
 
-    # Check 4: Scoring system
     try:
         from scoring_system import calculate_scores
         diagnostics['checks']['scoring_system'] = {
@@ -169,7 +148,6 @@ def diagnostic() -> Tuple[Dict, int]:
         }
         all_ok = False
 
-    # Check 5: Try to create GenAI client
     if diagnostics['checks']['env_vars'].get('google_api_key') == 'configured':
         try:
             from google import genai
@@ -199,18 +177,11 @@ def diagnostic() -> Tuple[Dict, int]:
 
 @app.route('/')
 def index():
-    """Serve frontend application."""
     return send_from_directory('public', 'index.html')
 
 
 @app.route('/invoke', methods=['POST'])
 def invoke_agent() -> Tuple[Dict, int]:
-    """
-    Execute AI agent pipeline for SEO/CRO/GEO analysis.
-
-    Returns:
-        JSON response with markdown report or error message
-    """
     print("[INVOKE] Endpoint /invoke chamado", flush=True)
 
     try:
@@ -232,7 +203,6 @@ def invoke_agent() -> Tuple[Dict, int]:
 
         print(f"[INVOKE] Iniciando análise para URL: {url}", flush=True)
 
-        # Check API key first
         api_key = os.getenv('GOOGLE_API_KEY')
         if not api_key:
             print("[INVOKE ERROR] GOOGLE_API_KEY não configurada", flush=True)
@@ -240,7 +210,6 @@ def invoke_agent() -> Tuple[Dict, int]:
 
         print("[INVOKE] API key encontrada, importando dependências...", flush=True)
 
-        # Import dependencies with error handling
         try:
             from google import genai
             print("[INVOKE] google.genai importado com sucesso", flush=True)
@@ -256,7 +225,6 @@ def invoke_agent() -> Tuple[Dict, int]:
             print(f"[INVOKE ERROR] Erro ao importar módulos locais: {e}", flush=True)
             return jsonify({'error': f'Erro ao importar módulos: {str(e)}'}), 500
 
-        # Create client
         try:
             client = genai.Client(api_key=api_key)
             print("[INVOKE] Cliente GenAI criado com sucesso", flush=True)
@@ -842,24 +810,20 @@ def generate_pdf() -> Tuple[Dict, int]:
         }), 500
 
 
-# Pre-load heavy dependencies when using gunicorn --preload
-# This speeds up worker startup significantly
 def preload_dependencies():
-    """Preload heavy libraries to speed up request handling."""
     try:
         print("[PRELOAD] Loading google.genai...", flush=True)
-        from google import genai  # noqa: F401 - intentional preload
+        from google import genai  # noqa: F401
         print("[PRELOAD] google.genai loaded successfully", flush=True)
 
         print("[PRELOAD] Loading web scraper dependencies...", flush=True)
-        from web_scraper import scrape_url  # noqa: F401 - intentional preload
-        from scoring_system import calculate_scores  # noqa: F401 - intentional preload
+        from web_scraper import scrape_url  # noqa: F401
+        from scoring_system import calculate_scores  # noqa: F401
         print("[PRELOAD] All dependencies loaded successfully", flush=True)
     except Exception as e:
         print(f"[PRELOAD WARNING] Could not preload dependencies: {e}", flush=True)
 
 
-# Run preload in production (when using gunicorn)
 if os.getenv('RENDER') or os.getenv('FLASK_ENV') == 'production':
     print("[STARTUP] Production environment detected - preloading dependencies...", flush=True)
     preload_dependencies()

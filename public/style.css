@@ -894,6 +894,7 @@ button:disabled {
   box-shadow: var(--shadow-xl);
   border: 1px solid var(--border-light);
   line-height: 1.8;
+  overflow-x: auto;
 }
 
 .markdown-body h1 {
@@ -904,6 +905,7 @@ button:disabled {
   border-bottom: 3px solid transparent;
   border-image: var(--primary-gradient) 1;
   letter-spacing: -0.02em;
+  color: var(--text-primary);
 }
 
 .markdown-body h2 {
@@ -914,6 +916,7 @@ button:disabled {
   padding-top: var(--spacing-xl);
   border-top: 2px solid var(--border-light);
   color: var(--text-primary);
+  scroll-margin-top: 100px;
 }
 
 .markdown-body h2:first-of-type {
@@ -928,6 +931,7 @@ button:disabled {
   margin-top: var(--spacing-xl);
   margin-bottom: var(--spacing-md);
   color: var(--primary-dark);
+  scroll-margin-top: 100px;
 }
 
 .markdown-body h4 {
@@ -935,12 +939,22 @@ button:disabled {
   font-weight: 600;
   margin-top: var(--spacing-lg);
   margin-bottom: var(--spacing-sm);
+  color: #334155;
+  scroll-margin-top: 100px;
+}
+
+.markdown-body h5 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: var(--spacing-md);
+  margin-bottom: var(--spacing-xs);
   color: var(--text-secondary);
 }
 
 .markdown-body p {
   margin-bottom: var(--spacing-lg);
   color: var(--text-primary);
+  text-align: justify;
 }
 
 .markdown-body ul,
@@ -958,6 +972,25 @@ button:disabled {
 .markdown-body li::marker {
   color: var(--primary);
   font-weight: 700;
+}
+
+/* Nested lists with better indentation */
+.markdown-body ul ul,
+.markdown-body ol ul,
+.markdown-body ul ol,
+.markdown-body ol ol {
+  margin: var(--spacing-xs) 0;
+  padding-left: var(--spacing-xl);
+}
+
+.markdown-body ul ul li::marker {
+  content: '◦ ';
+}
+
+/* Task lists (checkboxes) */
+.markdown-body input[type="checkbox"] {
+  margin-right: var(--spacing-xs);
+  cursor: pointer;
 }
 
 .markdown-body strong {
@@ -978,10 +1011,15 @@ button:disabled {
 .markdown-body pre {
   background: var(--bg-secondary);
   border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
   border-radius: var(--radius-lg);
   padding: var(--spacing-lg);
   overflow-x: auto;
   margin: var(--spacing-xl) 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  white-space: pre;
+  box-shadow: var(--shadow-sm);
 }
 
 .markdown-body pre code {
@@ -989,6 +1027,7 @@ button:disabled {
   padding: 0;
   border: none;
   color: var(--text-primary);
+  font-size: inherit;
 }
 
 .markdown-body blockquote {
@@ -999,6 +1038,11 @@ button:disabled {
   border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
   font-style: italic;
   color: var(--text-secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.markdown-body blockquote p:last-child {
+  margin-bottom: 0;
 }
 
 .markdown-body table {
@@ -1068,6 +1112,53 @@ button:disabled {
   border-radius: var(--radius-lg);
   margin: var(--spacing-xl) 0;
   box-shadow: var(--shadow-lg);
+}
+
+/* Enhanced styling for metrics and scores */
+.markdown-body em strong,
+.markdown-body strong em {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+}
+
+/* Improve readability for long paragraphs */
+.markdown-body > p {
+  max-width: 85ch;
+}
+
+/* Better spacing for definition lists */
+.markdown-body dl {
+  margin: var(--spacing-lg) 0;
+}
+
+.markdown-body dt {
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: var(--spacing-md);
+}
+
+.markdown-body dd {
+  margin-left: var(--spacing-xl);
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-secondary);
+}
+
+/* Highlight important notes */
+.markdown-body p:has(> strong:first-child) {
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: linear-gradient(to right, rgba(102, 126, 234, 0.05), transparent);
+  border-left: 3px solid var(--primary);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  margin: var(--spacing-lg) 0;
+}
+
+/* Improve code readability with syntax-like styling */
+.markdown-body code strong {
+  color: #c7254e;
+  font-weight: 700;
 }
 
 /* ========================================

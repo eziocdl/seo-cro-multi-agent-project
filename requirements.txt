@@ -7,9 +7,7 @@ python-dotenv==1.0.0
 beautifulsoup4==4.12.3
 requests==2.31.0
 gunicorn==23.0.0
-
-# lxml removido - BeautifulSoup usa html.parser nativo do Python
-# pydantic atualizado para versão com wheels pré-compilados
+weasyprint==66.0
 
 
 

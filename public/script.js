@@ -1,16 +1,12 @@
-// Growth Engine - Frontend JavaScript
-
 document.addEventListener("DOMContentLoaded", () => {
   const API_ENDPOINT = "/invoke";
   const PDF_ENDPOINT = "/generate-pdf";
 
-  // Form elements
   const form = document.getElementById("analysis-form");
   const submitButton = document.getElementById("submit-button");
   const urlInput = document.getElementById("url");
   const errorMessage = document.getElementById("form-error");
 
-  // View sections
   const heroSection = document.getElementById("hero-banner");
   const comoFuncionaSection = document.getElementById("como-funciona");
   const featuresSection = document.getElementById("features");
@@ -18,7 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const dashboardSection = document.getElementById("dashboard-section");
   const footer = document.querySelector(".site-footer");
 
-  // Dashboard elements
   const reportUrl = document.getElementById("report-url");
   const reportContent = document.getElementById("report-content");
   const backButton = document.getElementById("back-button");
@@ -27,34 +22,25 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentMarkdownReport = "";
   let currentUrl = "";
 
-  /**
-   * Sanitize HTML to prevent XSS attacks
-   * Removes dangerous tags and attributes
-   */
   function sanitizeHTML(html) {
     const temp = document.createElement('div');
     temp.textContent = html;
     const text = temp.innerHTML;
 
-    // Create a safe HTML by parsing and rebuilding
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
 
-    // Remove all script tags
     const scripts = doc.querySelectorAll('script');
     scripts.forEach(script => script.remove());
 
-    // Remove dangerous attributes
     const allElements = doc.querySelectorAll('*');
     allElements.forEach(element => {
-      // Remove event handlers
       Array.from(element.attributes).forEach(attr => {
         if (attr.name.startsWith('on')) {
           element.removeAttribute(attr.name);
         }
       });
 
-      // Remove javascript: in href/src
       ['href', 'src', 'action', 'formaction'].forEach(attr => {
         const value = element.getAttribute(attr);
         if (value && value.trim().toLowerCase().startsWith('javascript:')) {
@@ -66,11 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return doc.body.innerHTML;
   }
 
-  /**
-   * Show specific view and hide others
-   */
   function showView(view) {
-    // Hide all main sections
     if (heroSection) heroSection.classList.add("hidden");
     if (comoFuncionaSection) comoFuncionaSection.classList.add("hidden");
     if (featuresSection) featuresSection.classList.add("hidden");
@@ -78,7 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (dashboardSection) dashboardSection.classList.add("hidden");
     if (footer) footer.classList.add("hidden");
 
-    // Show requested view
     if (view === "hero") {
       if (heroSection) heroSection.classList.remove("hidden");
       if (comoFuncionaSection) comoFuncionaSection.classList.remove("hidden");
@@ -89,15 +70,10 @@ document.addEventListener("DOMContentLoaded", () => {
     } else if (view === "dashboard") {
       if (dashboardSection) dashboardSection.classList.remove("hidden");
       if (footer) footer.classList.remove("hidden");
-
-      // Scroll to top when showing dashboard
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }
 
-  /**
-   * Show error message
-   */
   function setFormError(message) {
     if (errorMessage) {
       errorMessage.textContent = message;
@@ -105,18 +81,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  /**
-   * Clear error message
-   */
   function clearFormError() {
     if (errorMessage) {
       errorMessage.classList.add("hidden");
     }
   }
 
-  /**
-   * Handle form submission and analysis
-   */
   async function handleAnalysis(event) {
     event.preventDefault();
     clearFormError();
@@ -127,19 +97,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Add https:// if not present
     if (!url.startsWith("http://") && !url.startsWith("https://")) {
       url = "https://" + url;
     }
 
     currentUrl = url;
 
-    // Update button state
     submitButton.disabled = true;
     const originalButtonText = submitButton.innerHTML;
     submitButton.innerHTML = '<span>Analisando...</span>';
 
-    // Show loader
     showView("loader");
 
     try {
@@ -172,19 +139,14 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("O servidor não retornou um relatório válido.");
       }
 
-      // Store report and display
       currentMarkdownReport = result.output;
 
-      // Security: Configure marked with secure options
       marked.setOptions({
         headerIds: false,
         mangle: false
       });
 
-      // Parse markdown with XSS protection
       const htmlContent = marked.parse(currentMarkdownReport);
-
-      // Sanitize HTML before inserting (remove dangerous tags/attributes)
       const sanitizedHTML = sanitizeHTML(htmlContent);
       reportContent.innerHTML = sanitizedHTML;
       reportUrl.textContent = currentUrl;
@@ -211,15 +173,11 @@ document.addEventListener("DOMContentLoaded", () => {
       showView("hero");
 
     } finally {
-      // Reset button state
       submitButton.disabled = false;
       submitButton.innerHTML = originalButtonText;
     }
   }
 
-  /**
-   * Handle PDF download
-   */
   async function handleDownload() {
     if (!currentMarkdownReport || !currentUrl) {
       alert("Nenhum relatório disponível para download.");
@@ -252,13 +210,11 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error(errorData.error || `Erro ${response.status} ao gerar PDF`);
       }
 
-      // Download the PDF
       const blob = await response.blob();
       const downloadUrl = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = downloadUrl;
 
-      // Create filename from URL
       const safeUrl = currentUrl
         .replace(/https?:\/\//, "")
         .replace(/[^a-z0-9]/gi, "_")
@@ -268,7 +224,6 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.appendChild(a);
       a.click();
 
-      // Cleanup
       window.URL.revokeObjectURL(downloadUrl);
       document.body.removeChild(a);
 
@@ -292,11 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  /**
-   * Handle back button - return to hero
-   */
   function handleBack() {
-    // Clear current report
     currentMarkdownReport = "";
     currentUrl = "";
     reportContent.innerHTML = "";
@@ -304,14 +255,10 @@ document.addEventListener("DOMContentLoaded", () => {
     urlInput.value = "";
     clearFormError();
 
-    // Show hero view
     showView("hero");
-
-    // Scroll to top
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  // Event listeners
   if (form) {
     form.addEventListener("submit", handleAnalysis);
   }
@@ -324,7 +271,6 @@ document.addEventListener("DOMContentLoaded", () => {
     downloadButton.addEventListener("click", handleDownload);
   }
 
-  // Smooth scroll for navigation links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener("click", function (e) {
       e.preventDefault();
@@ -344,8 +290,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Initialize view
   showView("hero");
-
   console.log("[INFO] Growth Engine inicializado com sucesso");
 });
